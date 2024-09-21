@@ -174,6 +174,126 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="21-main-函数的-argc-和-argv"><a class="header" href="#21-main-函数的-argc-和-argv">2.1 main 函数的 argc 和 argv</a></h1>
+<p>在 C 语言的 <code>main</code> 函数中，<code>argc</code> 和 <code>argv</code> 是用于获取命令行参数的两个重要参数，它们通常由操作系统提供，当程序启动时，它们会携带用户在命令行中输入的参数。</p>
+<h2 id="argc-和-argv-的来源"><a class="header" href="#argc-和-argv-的来源"><code>argc</code> 和 <code>argv</code> 的来源</a></h2>
+<ol>
+<li>
+<p><strong>操作系统传递</strong>：当用户在命令行中执行一个程序时，操作系统会将用户输入的命令和参数解析，然后传递给程序的 <code>main</code> 函数。具体来说，<code>argc</code> 和 <code>argv</code> 是由操作系统传递给程序的启动函数，并由它们传递给 <code>main</code> 函数。</p>
+<ul>
+<li><strong><code>argc</code></strong>：表示传递给程序的命令行参数的个数。</li>
+<li><strong><code>argv</code></strong>：是一个字符串数组，其中每个元素是一个用户在命令行中输入的参数。</li>
+</ul>
+</li>
+<li>
+<p><strong>命令行</strong>：用户在命令行中执行程序时提供了这些参数。比如：</p>
+<pre><code class="language-bash">./my_program arg1 arg2
+</code></pre>
+<ul>
+<li><code>argv[0]</code>：<code>"./my_program"</code>，是程序的名称或路径。</li>
+<li><code>argv[1]</code>：<code>"arg1"</code>，是用户输入的第一个参数。</li>
+<li><code>argv[2]</code>：<code>"arg2"</code>，是用户输入的第二个参数。</li>
+<li><strong><code>argc</code></strong>：此时的值为 3，因为命令行总共提供了 3 个字符串：程序名称、<code>arg1</code> 和 <code>arg2</code>。</li>
+</ul>
+</li>
+</ol>
+<h2 id="argc-和-argv-的含义"><a class="header" href="#argc-和-argv-的含义"><code>argc</code> 和 <code>argv</code> 的含义</a></h2>
+<ol>
+<li>
+<p><strong><code>argc</code></strong>：</p>
+<ul>
+<li>全称是 <strong>Argument Count</strong>，表示传递给程序的参数个数，包括程序本身。</li>
+<li>例如，对于命令 <code>./my_program arg1 arg2</code>，<code>argc</code> 的值是 3。</li>
+<li>如果没有提供参数，只执行程序本身，<code>argc</code> 的值是 1（因为只包含程序名称本身）。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>argv</code></strong>：</p>
+<ul>
+<li>全称是 <strong>Argument Vector</strong>，是一个字符串数组，每个元素代表一个命令行参数。</li>
+<li><code>argv[0]</code> 通常是程序的名称或路径，<code>argv[1]</code>、<code>argv[2]</code> 等是用户提供的参数。</li>
+</ul>
+</li>
+</ol>
+<h2 id="argc-和-argv-的用法"><a class="header" href="#argc-和-argv-的用法"><code>argc</code> 和 <code>argv</code> 的用法</a></h2>
+<p>在 C 语言的 <code>main</code> 函数中，<code>argc</code> 和 <code>argv</code> 常用于处理用户在命令行中传递的参数，特别是编译器、命令行工具等程序。程序可以根据这些参数调整执行流程，比如编译、运行不同的任务或打开特定的文件。</p>
+<h3 id="示例argc-和-argv-的使用"><a class="header" href="#示例argc-和-argv-的使用">示例：<code>argc</code> 和 <code>argv</code> 的使用</a></h3>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(int argc, char *argv[]) {
+    printf("argc = %d\n", argc);
+
+    for (int i = 0; i &lt; argc; i++) {
+        printf("argv[%d] = %s\n", i, argv[i]);
+    }
+
+    return 0;
+}
+</code></pre>
+<h3 id="运行结果"><a class="header" href="#运行结果">运行结果：</a></h3>
+<p>当你在命令行中运行程序 <code>./my_program arg1 arg2</code> 时，输出结果将是：</p>
+<pre><code class="language-bash">argc = 3
+argv[0] = ./my_program
+argv[1] = arg1
+argv[2] = arg2
+</code></pre>
+<ul>
+<li><strong><code>argc</code></strong>：告诉程序有 3 个参数。</li>
+<li><strong><code>argv</code></strong>：存储了程序名称和传递的两个参数。</li>
+</ul>
+<h2 id="进一步分析main-函数中的-argc-和-argv-在你的代码中的使用"><a class="header" href="#进一步分析main-函数中的-argc-和-argv-在你的代码中的使用">进一步分析：<code>main</code> 函数中的 <code>argc</code> 和 <code>argv</code> 在你的代码中的使用</a></h2>
+<p>在你的代码中，<code>main</code> 函数的签名如下：</p>
+<pre><code class="language-c">int main(int argc0, char **argv0)
+</code></pre>
+<ul>
+<li>这里 <code>argc0</code> 和 <code>argv0</code> 是从操作系统传递给 <code>main</code> 函数的原始命令行参数。</li>
+<li>这些参数是用户在命令行中调用 <code>TCC</code> 编译器时传递的，比如用户输入 <code>./tcc -o output hello.c</code>，<code>argc0</code> 是参数的数量（4），<code>argv0</code> 是包含这些字符串的数组。</li>
+</ul>
+<p>在 <code>main</code> 函数中：</p>
+<pre><code class="language-c">argc = argc0;
+argv = argv0;
+</code></pre>
+<ul>
+<li>这将 <code>argc0</code> 和 <code>argv0</code> 赋值给本地变量 <code>argc</code> 和 <code>argv</code>，以便在函数的后续部分使用这些参数。这样做通常是为了简化使用，并且在需要时可以通过改变 <code>argc</code> 和 <code>argv</code> 的值，达到不同的效果。</li>
+</ul>
+<h2 id="你代码中的-argc-和-argv-的实际用途"><a class="header" href="#你代码中的-argc-和-argv-的实际用途">你代码中的 <code>argc</code> 和 <code>argv</code> 的实际用途</a></h2>
+<ol>
+<li>
+<p><strong>传递给 <code>tcc_parse_args()</code></strong>：</p>
+<pre><code class="language-c">opt = tcc_parse_args(s, &amp;argc, &amp;argv, 1);
+</code></pre>
+<p><code>tcc_parse_args</code> 是 <code>TinyCC</code> 中一个用于解析命令行参数的函数。它接收 <code>argc</code> 和 <code>argv</code>，并返回解析后的选项。这是命令行工具的核心功能，决定了程序根据用户输入的命令行参数执行什么操作。</p>
+</li>
+<li>
+<p><strong>执行编译和其他工具任务</strong>：</p>
+<p>根据用户输入的参数，<code>TCC</code> 会执行不同的任务，比如编译、链接、生成预处理文件等：</p>
+<pre><code class="language-c">if (opt == OPT_HELP) {
+    fputs(help, stdout);
+    return 0;
+}
+</code></pre>
+<p>如果用户输入了 <code>tcc --help</code>，程序会检测到 <code>OPT_HELP</code>，然后输出帮助信息。</p>
+</li>
+<li>
+<p><strong>在编译过程中传递</strong>：</p>
+<p>一些命令行参数，比如源文件路径或输出文件路径，会通过 <code>argc</code> 和 <code>argv</code> 被传递给编译器的其他部分，执行相应的文件操作或编译任务。</p>
+</li>
+</ol>
+<h2 id="谁给的参数"><a class="header" href="#谁给的参数">谁给的参数？</a></h2>
+<ul>
+<li><strong>操作系统</strong>：当用户在命令行中运行程序时，操作系统会将用户输入的命令行参数解析，并传递给程序的 <code>main</code> 函数。
+<ul>
+<li>在 Linux、macOS 和 Windows 等操作系统中，当用户在终端或命令提示符下运行命令时，操作系统会捕获用户输入，并通过 <code>argc</code> 和 <code>argv</code> 传递给程序。</li>
+<li>比如，在 Linux 上运行 <code>./tcc -o output hello.c</code>，操作系统会将 <code>argc = 4</code> 和 <code>argv = {"./tcc", "-o", "output", "hello.c"}</code> 传递给 <code>main</code> 函数。</li>
+</ul>
+</li>
+</ul>
+<h2 id="总结"><a class="header" href="#总结">总结</a></h2>
+<ul>
+<li><strong><code>argc</code></strong> 是命令行参数的数量。</li>
+<li><strong><code>argv</code></strong> 是一个包含命令行参数的数组，每个参数都是一个字符串。</li>
+<li>这些参数由操作系统传递，当用户通过命令行运行程序时，操作系统捕获用户的输入并将其传递给 <code>main</code> 函数。</li>
+<li>在你的代码中，<code>argc0</code> 和 <code>argv0</code> 是系统传递的参数，它们被赋值给局部变量 <code>argc</code> 和 <code>argv</code>，并在编译器的初始化、参数解析、文件处理等过程中使用。</li>
+</ul>
 
                     </main>
 

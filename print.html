@@ -1011,7 +1011,305 @@ if (!done) {
 </ol>
 <p>该函数通过标签和条件控制不同的流程，从而支持灵活的编译和文件处理。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="21-main-函数的-argc-和-argv"><a class="header" href="#21-main-函数的-argc-和-argv">2.1 main 函数的 argc 和 argv</a></h1>
+<p>在 C 语言的 <code>main</code> 函数中，<code>argc</code> 和 <code>argv</code> 是用于获取命令行参数的两个重要参数，它们通常由操作系统提供，当程序启动时，它们会携带用户在命令行中输入的参数。</p>
+<h2 id="argc-和-argv-的来源"><a class="header" href="#argc-和-argv-的来源"><code>argc</code> 和 <code>argv</code> 的来源</a></h2>
+<ol>
+<li>
+<p><strong>操作系统传递</strong>：当用户在命令行中执行一个程序时，操作系统会将用户输入的命令和参数解析，然后传递给程序的 <code>main</code> 函数。具体来说，<code>argc</code> 和 <code>argv</code> 是由操作系统传递给程序的启动函数，并由它们传递给 <code>main</code> 函数。</p>
+<ul>
+<li><strong><code>argc</code></strong>：表示传递给程序的命令行参数的个数。</li>
+<li><strong><code>argv</code></strong>：是一个字符串数组，其中每个元素是一个用户在命令行中输入的参数。</li>
+</ul>
+</li>
+<li>
+<p><strong>命令行</strong>：用户在命令行中执行程序时提供了这些参数。比如：</p>
+<pre><code class="language-bash">./my_program arg1 arg2
+</code></pre>
+<ul>
+<li><code>argv[0]</code>：<code>"./my_program"</code>，是程序的名称或路径。</li>
+<li><code>argv[1]</code>：<code>"arg1"</code>，是用户输入的第一个参数。</li>
+<li><code>argv[2]</code>：<code>"arg2"</code>，是用户输入的第二个参数。</li>
+<li><strong><code>argc</code></strong>：此时的值为 3，因为命令行总共提供了 3 个字符串：程序名称、<code>arg1</code> 和 <code>arg2</code>。</li>
+</ul>
+</li>
+</ol>
+<h2 id="argc-和-argv-的含义"><a class="header" href="#argc-和-argv-的含义"><code>argc</code> 和 <code>argv</code> 的含义</a></h2>
+<ol>
+<li>
+<p><strong><code>argc</code></strong>：</p>
+<ul>
+<li>全称是 <strong>Argument Count</strong>，表示传递给程序的参数个数，包括程序本身。</li>
+<li>例如，对于命令 <code>./my_program arg1 arg2</code>，<code>argc</code> 的值是 3。</li>
+<li>如果没有提供参数，只执行程序本身，<code>argc</code> 的值是 1（因为只包含程序名称本身）。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>argv</code></strong>：</p>
+<ul>
+<li>全称是 <strong>Argument Vector</strong>，是一个字符串数组，每个元素代表一个命令行参数。</li>
+<li><code>argv[0]</code> 通常是程序的名称或路径，<code>argv[1]</code>、<code>argv[2]</code> 等是用户提供的参数。</li>
+</ul>
+</li>
+</ol>
+<h2 id="argc-和-argv-的用法"><a class="header" href="#argc-和-argv-的用法"><code>argc</code> 和 <code>argv</code> 的用法</a></h2>
+<p>在 C 语言的 <code>main</code> 函数中，<code>argc</code> 和 <code>argv</code> 常用于处理用户在命令行中传递的参数，特别是编译器、命令行工具等程序。程序可以根据这些参数调整执行流程，比如编译、运行不同的任务或打开特定的文件。</p>
+<h3 id="示例argc-和-argv-的使用"><a class="header" href="#示例argc-和-argv-的使用">示例：<code>argc</code> 和 <code>argv</code> 的使用</a></h3>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main(int argc, char *argv[]) {
+    printf("argc = %d\n", argc);
+
+    for (int i = 0; i &lt; argc; i++) {
+        printf("argv[%d] = %s\n", i, argv[i]);
+    }
+
+    return 0;
+}
+</code></pre>
+<h3 id="运行结果"><a class="header" href="#运行结果">运行结果：</a></h3>
+<p>当你在命令行中运行程序 <code>./my_program arg1 arg2</code> 时，输出结果将是：</p>
+<pre><code class="language-bash">argc = 3
+argv[0] = ./my_program
+argv[1] = arg1
+argv[2] = arg2
+</code></pre>
+<ul>
+<li><strong><code>argc</code></strong>：告诉程序有 3 个参数。</li>
+<li><strong><code>argv</code></strong>：存储了程序名称和传递的两个参数。</li>
+</ul>
+<h2 id="进一步分析main-函数中的-argc-和-argv-在你的代码中的使用"><a class="header" href="#进一步分析main-函数中的-argc-和-argv-在你的代码中的使用">进一步分析：<code>main</code> 函数中的 <code>argc</code> 和 <code>argv</code> 在你的代码中的使用</a></h2>
+<p>在你的代码中，<code>main</code> 函数的签名如下：</p>
+<pre><code class="language-c">int main(int argc0, char **argv0)
+</code></pre>
+<ul>
+<li>这里 <code>argc0</code> 和 <code>argv0</code> 是从操作系统传递给 <code>main</code> 函数的原始命令行参数。</li>
+<li>这些参数是用户在命令行中调用 <code>TCC</code> 编译器时传递的，比如用户输入 <code>./tcc -o output hello.c</code>，<code>argc0</code> 是参数的数量（4），<code>argv0</code> 是包含这些字符串的数组。</li>
+</ul>
+<p>在 <code>main</code> 函数中：</p>
+<pre><code class="language-c">argc = argc0;
+argv = argv0;
+</code></pre>
+<ul>
+<li>这将 <code>argc0</code> 和 <code>argv0</code> 赋值给本地变量 <code>argc</code> 和 <code>argv</code>，以便在函数的后续部分使用这些参数。这样做通常是为了简化使用，并且在需要时可以通过改变 <code>argc</code> 和 <code>argv</code> 的值，达到不同的效果。</li>
+</ul>
+<h2 id="你代码中的-argc-和-argv-的实际用途"><a class="header" href="#你代码中的-argc-和-argv-的实际用途">你代码中的 <code>argc</code> 和 <code>argv</code> 的实际用途</a></h2>
+<ol>
+<li>
+<p><strong>传递给 <code>tcc_parse_args()</code></strong>：</p>
+<pre><code class="language-c">opt = tcc_parse_args(s, &amp;argc, &amp;argv, 1);
+</code></pre>
+<p><code>tcc_parse_args</code> 是 <code>TinyCC</code> 中一个用于解析命令行参数的函数。它接收 <code>argc</code> 和 <code>argv</code>，并返回解析后的选项。这是命令行工具的核心功能，决定了程序根据用户输入的命令行参数执行什么操作。</p>
+</li>
+<li>
+<p><strong>执行编译和其他工具任务</strong>：</p>
+<p>根据用户输入的参数，<code>TCC</code> 会执行不同的任务，比如编译、链接、生成预处理文件等：</p>
+<pre><code class="language-c">if (opt == OPT_HELP) {
+    fputs(help, stdout);
+    return 0;
+}
+</code></pre>
+<p>如果用户输入了 <code>tcc --help</code>，程序会检测到 <code>OPT_HELP</code>，然后输出帮助信息。</p>
+</li>
+<li>
+<p><strong>在编译过程中传递</strong>：</p>
+<p>一些命令行参数，比如源文件路径或输出文件路径，会通过 <code>argc</code> 和 <code>argv</code> 被传递给编译器的其他部分，执行相应的文件操作或编译任务。</p>
+</li>
+</ol>
+<h2 id="谁给的参数"><a class="header" href="#谁给的参数">谁给的参数？</a></h2>
+<ul>
+<li><strong>操作系统</strong>：当用户在命令行中运行程序时，操作系统会将用户输入的命令行参数解析，并传递给程序的 <code>main</code> 函数。
+<ul>
+<li>在 Linux、macOS 和 Windows 等操作系统中，当用户在终端或命令提示符下运行命令时，操作系统会捕获用户输入，并通过 <code>argc</code> 和 <code>argv</code> 传递给程序。</li>
+<li>比如，在 Linux 上运行 <code>./tcc -o output hello.c</code>，操作系统会将 <code>argc = 4</code> 和 <code>argv = {"./tcc", "-o", "output", "hello.c"}</code> 传递给 <code>main</code> 函数。</li>
+</ul>
+</li>
+</ul>
+<h2 id="总结-4"><a class="header" href="#总结-4">总结</a></h2>
+<ul>
+<li><strong><code>argc</code></strong> 是命令行参数的数量。</li>
+<li><strong><code>argv</code></strong> 是一个包含命令行参数的数组，每个参数都是一个字符串。</li>
+<li>这些参数由操作系统传递，当用户通过命令行运行程序时，操作系统捕获用户的输入并将其传递给 <code>main</code> 函数。</li>
+<li>在你的代码中，<code>argc0</code> 和 <code>argv0</code> 是系统传递的参数，它们被赋值给局部变量 <code>argc</code> 和 <code>argv</code>，并在编译器的初始化、参数解析、文件处理等过程中使用。</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="22-static的用法"><a class="header" href="#22-static的用法">2.2 static的用法</a></h1>
+<p>在 C 语言中，<code>static</code> 是一个关键字，它有多种不同的用法，具体取决于它在函数、变量或文件中的位置。<code>static</code> 主要用于控制变量和函数的<strong>作用域</strong>和<strong>生命周期</strong>。我们将详细讨论 <code>static</code> 在局部变量、全局变量和函数中的用法，并给出注意事项。</p>
+<h2 id="1-static-局部变量"><a class="header" href="#1-static-局部变量">1. <code>static</code> 局部变量</a></h2>
+<h3 id="11-用法"><a class="header" href="#11-用法">1.1 用法</a></h3>
+<p>当 <code>static</code> 修饰局部变量时，该变量的生命周期扩展为整个程序运行期间，即它是<strong>静态存储的</strong>，但它的作用域仍然是定义它的函数内。</p>
+<p>普通的局部变量在每次函数调用时都会重新创建和销毁，而 <code>static</code> 局部变量只在第一次调用时初始化，后续调用会保留其值。</p>
+<h3 id="12-示例"><a class="header" href="#12-示例">1.2 示例</a></h3>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+void counter() {
+    static int count = 0;  // 静态局部变量，初始化一次
+    count++;
+    printf("count = %d\n", count);
+}
+
+int main() {
+    counter();  // 输出: count = 1
+    counter();  // 输出: count = 2
+    counter();  // 输出: count = 3
+    return 0;
+}
+</code></pre>
+<h3 id="13-注意事项"><a class="header" href="#13-注意事项">1.3 注意事项</a></h3>
+<ul>
+<li><strong>静态局部变量只初始化一次</strong>：即使多次调用函数，也不会再次初始化静态局部变量。</li>
+<li><strong>生命周期是整个程序运行期间</strong>，但其作用域仅限于定义它的函数内部。</li>
+</ul>
+<h2 id="2-static-全局变量"><a class="header" href="#2-static-全局变量">2. <code>static</code> 全局变量</a></h2>
+<h3 id="21-用法"><a class="header" href="#21-用法">2.1 用法</a></h3>
+<p><code>static</code> 可以用来修饰全局变量，将全局变量的<strong>作用域限制在定义它的文件内部</strong>。通常，全局变量可以在整个程序中被其他文件访问，但使用 <code>static</code> 限制后，它只能在声明它的文件中访问，避免命名冲突。</p>
+<h3 id="22-示例"><a class="header" href="#22-示例">2.2 示例</a></h3>
+<pre><code class="language-c">// file1.c
+static int count = 10;  // 静态全局变量，只在 file1.c 内可见
+
+void increment() {
+    count++;
+}
+
+int get_count() {
+    return count;
+}
+
+// file2.c
+#include &lt;stdio.h&gt;
+
+extern int get_count();
+extern void increment();
+
+int main() {
+    increment();  // file1.c 中的静态全局变量 count 被增加
+    printf("count = %d\n", get_count());  // 输出: count = 11
+    return 0;
+}
+</code></pre>
+<h3 id="23-注意事项"><a class="header" href="#23-注意事项">2.3 注意事项</a></h3>
+<ul>
+<li><strong>作用域仅限于定义它的文件</strong>：即使其他文件使用 <code>extern</code> 关键字，也无法访问 <code>static</code> 修饰的全局变量。</li>
+<li><strong>命名冲突避免</strong>：使用 <code>static</code> 可以确保全局变量在不同文件中使用相同的名字时不会冲突。</li>
+</ul>
+<h2 id="3-static-函数"><a class="header" href="#3-static-函数">3. <code>static</code> 函数</a></h2>
+<h3 id="31-用法"><a class="header" href="#31-用法">3.1 用法</a></h3>
+<p><code>static</code> 函数的作用域也仅限于定义它的文件内。它与 <code>static</code> 全局变量类似，修饰函数后，该函数只能在定义它的文件内调用。</p>
+<h3 id="32-示例"><a class="header" href="#32-示例">3.2 示例</a></h3>
+<pre><code class="language-c">// file1.c
+static void helper() {
+    printf("This is a static function.\n");
+}
+
+void call_helper() {
+    helper();  // 可以在 file1.c 中调用
+}
+
+// file2.c
+#include &lt;stdio.h&gt;
+
+extern void call_helper();
+
+int main() {
+    call_helper();  // file1.c 中的函数被调用
+    // helper();  // 错误！无法在 file2.c 中调用 static 函数
+    return 0;
+}
+</code></pre>
+<h3 id="33-注意事项"><a class="header" href="#33-注意事项">3.3 注意事项</a></h3>
+<ul>
+<li><strong>作用域仅限于文件内</strong>：<code>static</code> 函数不能被其他文件直接调用，即使使用 <code>extern</code> 也无效。</li>
+<li><strong>函数命名冲突避免</strong>：如果在多个文件中定义了相同名字的 <code>static</code> 函数，它们彼此之间不会冲突，因为它们的作用域都仅限于各自的文件。</li>
+</ul>
+<h2 id="4-static-在类结构体中的使用c-对比"><a class="header" href="#4-static-在类结构体中的使用c-对比">4. <code>static</code> 在类/结构体中的使用（C++ 对比）</a></h2>
+<p>在 C 语言中，<code>static</code> 不能直接修饰结构体成员。但在 C++ 中，<code>static</code> 可以用于类的静态成员变量和静态成员函数。静态成员属于类而不属于类的实例，它们在所有实例之间共享。</p>
+<h3 id="41-示例c"><a class="header" href="#41-示例c">4.1 示例（C++）</a></h3>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+class MyClass {
+public:
+    static int count;  // 静态成员变量
+    MyClass() {
+        count++;
+    }
+};
+
+int MyClass::count = 0;  // 静态成员变量的初始化
+
+int main() {
+    MyClass obj1;
+    MyClass obj2;
+    std::cout &lt;&lt; "Count: " &lt;&lt; MyClass::count &lt;&lt; std::endl;  // 输出: Count: 2
+    return 0;
+}
+</code></pre>
+<h2 id="5-static-与多线程"><a class="header" href="#5-static-与多线程">5. <code>static</code> 与多线程</a></h2>
+<p>在多线程程序中，使用 <code>static</code> 局部变量时需要格外小心，因为静态局部变量是跨函数调用共享的。如果多个线程同时访问该变量而没有同步机制，可能会导致竞争条件（race condition）。</p>
+<h3 id="51-示例"><a class="header" href="#51-示例">5.1 示例</a></h3>
+<pre><code class="language-c">#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
+
+void* thread_func(void* arg) {
+    static int shared_data = 0;  // 静态局部变量，多个线程共享
+    shared_data++;
+    printf("Thread %ld: shared_data = %d\n", (long)arg, shared_data);
+    return NULL;
+}
+
+int main() {
+    pthread_t threads[5];
+
+    for (long i = 0; i &lt; 5; i++) {
+        pthread_create(&amp;threads[i], NULL, thread_func, (void*)i);
+    }
+
+    for (int i = 0; i &lt; 5; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    return 0;
+}
+</code></pre>
+<h3 id="52-竞争条件问题"><a class="header" href="#52-竞争条件问题">5.2 竞争条件问题</a></h3>
+<ul>
+<li><strong>问题</strong>：多个线程共享同一个 <code>static</code> 变量 <code>shared_data</code>，可能导致线程之间的竞争条件。多个线程同时访问或修改该变量时，可能会导致意外结果。</li>
+<li><strong>解决办法</strong>：通过使用互斥锁（mutex）等同步机制保护共享的 <code>static</code> 变量。</li>
+</ul>
+<h2 id="6-其他注意事项"><a class="header" href="#6-其他注意事项">6. 其他注意事项</a></h2>
+<ol>
+<li>
+<p><strong>静态变量初始化</strong>：</p>
+<ul>
+<li><code>static</code> 变量在程序开始时被初始化一次，未显式初始化的静态变量会被自动初始化为<strong>零</strong>。</li>
+<li>静态变量的初始化只发生一次，且是在程序启动时，而不是每次进入作用域时。</li>
+</ul>
+</li>
+<li>
+<p><strong>局部和全局的区别</strong>：</p>
+<ul>
+<li>局部静态变量的作用域是函数内部，而全局静态变量的作用域是文件内部。</li>
+<li>局部静态变量的生命周期与程序相同，而普通局部变量的生命周期只限于函数调用期间。</li>
+</ul>
+</li>
+<li>
+<p><strong>避免名称冲突</strong>：</p>
+<ul>
+<li>静态全局变量和静态函数可以有效避免不同文件中同名的全局变量或函数引发的冲突。</li>
+</ul>
+</li>
+<li>
+<p><strong>性能优化</strong>：</p>
+<ul>
+<li>静态变量的使用可能在某些场景中提供性能上的优化，因为它们在整个程序运行期间仅初始化一次。</li>
+</ul>
+</li>
+</ol>
+<h2 id="总结-5"><a class="header" href="#总结-5">总结</a></h2>
+<ul>
+<li><strong>局部变量</strong>：<code>static</code> 局部变量在函数内部作用域中可见，但生命周期贯穿整个程序运行。</li>
+<li><strong>全局变量</strong>：<code>static</code> 全局变量只能在声明它的文件中可见，作用域限制在文件内，避免全局命名冲突。</li>
+<li><strong>函数</strong>：<code>static</code> 函数只能在声明它的文件中可见，不能被其他文件调用。</li>
+<li><strong>多线程问题</strong>：在多线程程序中使用 <code>static</code> 变量需要特别注意同步问题。</li>
+</ul>
+<p>通过正确使用 <code>static</code>，可以控制变量的可见性、生命周期，以及有效避免全局变量和函数命名冲突，同时确保静态局部变量的值在多次函数调用之间保持一致。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="23-ppfp-变量的作用"><a class="header" href="#23-ppfp-变量的作用">2.3 ppfp 变量的作用</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="24-c-语言中的枚举的用法"><a class="header" href="#24-c-语言中的枚举的用法">2.4 C 语言中的枚举的用法</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="25-tccstate"><a class="header" href="#25-tccstate">2.5 TCCState</a></h1>

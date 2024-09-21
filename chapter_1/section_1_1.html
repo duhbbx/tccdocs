@@ -174,6 +174,142 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="11-tinycc-项目介绍"><a class="header" href="#11-tinycc-项目介绍">1.1 TinyCC 项目介绍</a></h1>
+<h2 id="tinycc-项目介绍"><a class="header" href="#tinycc-项目介绍">TinyCC 项目介绍</a></h2>
+<p><strong>TinyCC（TCC，全称为 Tiny C Compiler）</strong> 是一个小巧且高效的 C 语言编译器，目标是提供非常快速的编译速度，同时占用极少的系统资源。由 Fabrice Bellard 开发，TinyCC 旨在为 C 语言提供一个高度便携且功能完善的编译器。</p>
+<h3 id="项目特点"><a class="header" href="#项目特点">项目特点</a></h3>
+<ol>
+<li>
+<p><strong>极快的编译速度</strong>：
+TinyCC 的最大特点之一是其超快的编译速度，通常比传统的编译器如 GCC 和 Clang 快 9 倍到 10 倍。这使得它非常适合在开发、测试或嵌入式系统中使用。</p>
+</li>
+<li>
+<p><strong>极小的二进制文件</strong>：
+TinyCC 是一个极小的编译器，整个编译器的代码量非常小，并且编译生成的可执行文件非常小巧，适合资源受限的系统或嵌入式设备。</p>
+</li>
+<li>
+<p><strong>C99 标准兼容性</strong>：
+TinyCC 支持大多数 C99 标准的特性，允许开发者使用现代 C 标准进行编程。</p>
+</li>
+<li>
+<p><strong>即时编译（JIT）功能</strong>：
+TinyCC 支持即时编译（Just-In-Time Compilation），可以在运行时动态编译和执行 C 代码。这使得它适用于需要动态生成和执行代码的场景。</p>
+</li>
+<li>
+<p><strong>内存安全检查</strong>：
+TinyCC 提供可选的内存安全检查模式，可以检测一些常见的运行时错误，如数组越界访问和非法指针操作。</p>
+</li>
+<li>
+<p><strong>多平台支持</strong>：
+TinyCC 支持多种操作系统和硬件架构，包括：</p>
+<ul>
+<li>Linux、Windows 和 macOS</li>
+<li>x86、x86_64、ARM、ARM64、RISC-V 等架构</li>
+</ul>
+</li>
+<li>
+<p><strong>静态和动态库支持</strong>：
+TinyCC 支持生成静态库（<code>.a</code>）和动态库（<code>.so</code> 或 <code>.dll</code>），可以方便地集成到其他项目中。</p>
+</li>
+</ol>
+<h3 id="核心功能"><a class="header" href="#核心功能">核心功能</a></h3>
+<ol>
+<li>
+<p><strong>完整的 C 编译器</strong>：
+虽然 TinyCC 的代码量很小，但它是一个功能完善的 C 编译器，支持常见的 C 语言特性，如预处理器、数据类型、控制结构、函数等。</p>
+</li>
+<li>
+<p><strong>编译优化</strong>：
+尽管 TinyCC 的目标是快速编译，但它也提供了基础的优化功能，以生成高效的代码。</p>
+</li>
+<li>
+<p><strong>内嵌汇编</strong>：
+TinyCC 支持内嵌汇编代码，允许开发者在 C 代码中直接使用汇编指令。</p>
+</li>
+<li>
+<p><strong>动态链接库支持</strong>：
+TinyCC 可以生成和链接动态库，适用于需要模块化设计的程序。</p>
+</li>
+<li>
+<p><strong>轻量级</strong>：
+TinyCC 的二进制文件非常小，编译出来的可执行文件也极其紧凑，非常适合嵌入式开发和低资源环境。</p>
+</li>
+</ol>
+<h3 id="使用场景"><a class="header" href="#使用场景">使用场景</a></h3>
+<ol>
+<li>
+<p><strong>嵌入式开发</strong>：
+TinyCC 的小内存占用和生成小巧的二进制文件，使其特别适合资源受限的嵌入式设备。</p>
+</li>
+<li>
+<p><strong>教学与学习</strong>：
+TinyCC 的设计简单易懂，适合学习 C 编译器的内部工作原理，或者作为教学工具来教授编译原理和 C 语言。</p>
+</li>
+<li>
+<p><strong>快速开发与原型设计</strong>：
+TinyCC 的即时编译功能和快速的编译速度非常适合进行快速的原型设计，开发者可以快速编译和测试 C 代码。</p>
+</li>
+<li>
+<p><strong>动态代码生成</strong>：
+TinyCC 提供了 JIT 编译功能，适用于需要动态生成和执行代码的场景，如脚本引擎或游戏引擎。</p>
+</li>
+</ol>
+<h3 id="安装与使用"><a class="header" href="#安装与使用">安装与使用</a></h3>
+<p>TinyCC 支持在 Linux、Windows 和 macOS 等平台上运行，安装步骤如下：</p>
+<ol>
+<li>
+<p><strong>获取源码</strong>：
+可以从 TinyCC 的官方 GitHub 仓库获取源码：</p>
+<pre><code class="language-bash">git clone https://github.com/TinyCC/tinycc.git
+</code></pre>
+</li>
+<li>
+<p><strong>编译并安装</strong>：</p>
+<pre><code class="language-bash">cd tinycc
+./configure
+make
+sudo make install
+</code></pre>
+</li>
+<li>
+<p><strong>使用 TinyCC 编译 C 程序</strong>：</p>
+<p>编译和运行一个简单的 C 程序：</p>
+<pre><code class="language-bash">tcc -o hello hello.c
+./hello
+</code></pre>
+</li>
+</ol>
+<h3 id="项目历史"><a class="header" href="#项目历史">项目历史</a></h3>
+<p>TinyCC 由 Fabrice Bellard 于 2001 年首次发布，目的是为了提供一个极小且快速的 C 编译器。它以其独特的即时编译功能和内存安全性检查功能著称，并且其开源的代码使得它成为学习编译器设计的绝佳案例。</p>
+<h3 id="项目优势和不足"><a class="header" href="#项目优势和不足">项目优势和不足</a></h3>
+<ul>
+<li>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>极快的编译速度</li>
+<li>小巧的二进制文件</li>
+<li>支持 C99 标准</li>
+<li>JIT 支持</li>
+<li>多平台兼容</li>
+</ul>
+</li>
+<li>
+<p><strong>不足</strong>：</p>
+<ul>
+<li>优化能力不如 GCC 或 Clang 等主流编译器</li>
+<li>一些高级 C 语言特性支持有限</li>
+<li>不适合大规模项目的生产环境</li>
+</ul>
+</li>
+</ul>
+<h3 id="结论"><a class="header" href="#结论">结论</a></h3>
+<p>TinyCC 是一个非常适合嵌入式开发、学习编译器工作原理、快速原型设计的轻量级 C 编译器。尽管它的优化能力和高级功能不如主流编译器，但凭借其极快的编译速度和小巧的体积，TinyCC 在某些特定场景下仍然非常有用。</p>
+<h3 id="相关链接"><a class="header" href="#相关链接">相关链接</a></h3>
+<ul>
+<li><strong>项目主页</strong>: <a href="https://bellard.org/tcc/">https://bellard.org/tcc/</a></li>
+<li><strong>GitHub 仓库</strong>: <a href="https://github.com/TinyCC/tinycc">https://github.com/TinyCC/tinycc</a></li>
+<li><strong>文档</strong>: <a href="https://bellard.org/tcc/tcc-doc.html">https://bellard.org/tcc/tcc-doc.html</a></li>
+</ul>
+<p>TinyCC 是一款轻量但功能强大的 C 编译器，适合在资源有限或需要快速编译的场景中使用。</p>
 
                     </main>
 

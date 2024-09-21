@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_2.html">1.2 autoconfigure的使用</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_3.html">1.3 构建调试环境</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_4.html">1.4 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="chapter_2/chapter_1.html">第一章 tcc.c 主流程分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="chapter_6.html">第六章 代码生成</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_4.html">1.4 构建调试环境</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_5.html">1.5 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="chapter_2/chapter_1.html">第一章 tcc.c 主流程分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="chapter_6.html">第六章 代码生成</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -319,9 +319,133 @@ sudo make install
 <li><strong>文档</strong>: <a href="https://bellard.org/tcc/tcc-doc.html">https://bellard.org/tcc/tcc-doc.html</a></li>
 </ul>
 <p>TinyCC 是一款轻量但功能强大的 C 编译器，适合在资源有限或需要快速编译的场景中使用。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="12-autoconfigure的使用"><a class="header" href="#12-autoconfigure的使用">1.2 autoconfigure的使用</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="12-autoconf的使用"><a class="header" href="#12-autoconf的使用">1.2 autoconf的使用</a></h1>
+<p><code>autoconf</code> 是一个自动化工具，用于生成能够自动配置源代码的 <code>configure</code> 脚本。它是 GNU 构建系统的一部分，通常与 <code>automake</code> 和 <code>autoconf</code> 一起使用，用于自动生成配置脚本，使源代码能够在不同平台和系统中编译和安装。</p>
+<h2 id="autoconf-的基本使用步骤"><a class="header" href="#autoconf-的基本使用步骤"><code>autoconf</code> 的基本使用步骤</a></h2>
+<p><code>autoconf</code> 的主要目的是自动检测系统的环境和依赖，以便生成适用于当前系统的 <code>Makefile</code>。通常用于大型项目，帮助开发者简化跨平台编译过程。</p>
+<h2 id="常见的-autoconf-使用步骤"><a class="header" href="#常见的-autoconf-使用步骤">常见的 <code>autoconf</code> 使用步骤</a></h2>
+<h3 id="1-创建-configureac-文件"><a class="header" href="#1-创建-configureac-文件">1. 创建 <code>configure.ac</code> 文件</a></h3>
+<p><code>configure.ac</code> 文件是 <code>autoconf</code> 使用的输入文件，包含配置脚本生成所需的各种检查和宏。你需要在项目根目录下创建一个 <code>configure.ac</code> 文件来描述项目。</p>
+<p>以下是一个简单的 <code>configure.ac</code> 文件示例：</p>
+<pre><code class="language-bash"># 初始化并设置项目名称、版本号和目标主机
+AC_INIT([my_program], [1.0], [me@example.com])
+
+# 检查 C 编译器是否存在
+AC_PROG_CC
+
+# 设置输出的 Makefile
+AC_CONFIG_FILES([Makefile])
+
+# 结束配置文件
+AC_OUTPUT
+</code></pre>
+<h3 id="2-创建-makefileam"><a class="header" href="#2-创建-makefileam">2. 创建 <code>Makefile.am</code></a></h3>
+<p><code>Makefile.am</code> 是 <code>automake</code> 使用的文件，描述了需要编译和链接的源文件。你可以在项目根目录下创建一个简单的 <code>Makefile.am</code> 文件：</p>
+<pre><code class="language-bash">bin_PROGRAMS = my_program      # 要编译的可执行文件
+my_program_SOURCES = main.c    # 源文件列表
+</code></pre>
+<h3 id="3-生成-configure-脚本"><a class="header" href="#3-生成-configure-脚本">3. 生成 <code>configure</code> 脚本</a></h3>
+<p>在创建完 <code>configure.ac</code> 和 <code>Makefile.am</code> 之后，运行以下命令来生成 <code>configure</code> 脚本和其他需要的构建文件：</p>
+<pre><code class="language-bash">autoreconf --install
+</code></pre>
+<p>这会生成一个 <code>configure</code> 脚本，该脚本可以在不同的系统中运行，自动配置和生成 <code>Makefile</code>。</p>
+<h3 id="4-运行-configure"><a class="header" href="#4-运行-configure">4. 运行 <code>configure</code></a></h3>
+<p>生成 <code>configure</code> 脚本后，你可以运行它来检查系统环境并生成 <code>Makefile</code>：</p>
+<pre><code class="language-bash">./configure
+</code></pre>
+<p>运行 <code>configure</code> 后，它会检测系统的编译器、库、头文件等依赖，并根据这些信息生成适用于当前系统的 <code>Makefile</code>。</p>
+<h3 id="5-编译项目"><a class="header" href="#5-编译项目">5. 编译项目</a></h3>
+<p>当 <code>Makefile</code> 生成之后，你可以像通常使用 <code>make</code> 一样编译项目：</p>
+<pre><code class="language-bash">make
+</code></pre>
+<h3 id="6-安装项目"><a class="header" href="#6-安装项目">6. 安装项目</a></h3>
+<p>编译完成后，可以使用以下命令将生成的可执行文件或库安装到系统指定目录（例如 <code>/usr/local/bin</code>）：</p>
+<pre><code class="language-bash">sudo make install
+</code></pre>
+<h3 id="7-清理构建文件"><a class="header" href="#7-清理构建文件">7. 清理构建文件</a></h3>
+<p>如果需要清理构建过程中生成的中间文件，可以使用以下命令：</p>
+<pre><code class="language-bash">make clean
+</code></pre>
+<h2 id="示例一个完整的-autoconf-项目"><a class="header" href="#示例一个完整的-autoconf-项目">示例：一个完整的 <code>autoconf</code> 项目</a></h2>
+<p>以下是一个使用 <code>autoconf</code> 的简单 C 项目结构示例。</p>
+<h3 id="目录结构"><a class="header" href="#目录结构">目录结构</a></h3>
+<pre><code class="language-plaintext">my_project/
+├── configure.ac
+├── Makefile.am
+├── src/
+│   ├── Makefile.am
+│   └── main.c
+</code></pre>
+<h3 id="configureac-内容"><a class="header" href="#configureac-内容"><code>configure.ac</code> 内容</a></h3>
+<pre><code class="language-bash">AC_INIT([my_program], [1.0], [me@example.com])
+AC_CONFIG_SRCDIR([src/main.c])
+AC_CONFIG_HEADERS([config.h])
+AM_INIT_AUTOMAKE
+AC_PROG_CC
+AC_CONFIG_FILES([Makefile src/Makefile])
+AC_OUTPUT
+</code></pre>
+<h3 id="makefileam-内容项目根目录"><a class="header" href="#makefileam-内容项目根目录"><code>Makefile.am</code> 内容（项目根目录）</a></h3>
+<pre><code class="language-bash">SUBDIRS = src
+</code></pre>
+<h3 id="makefileam-内容src-目录"><a class="header" href="#makefileam-内容src-目录"><code>Makefile.am</code> 内容（<code>src/</code> 目录）</a></h3>
+<pre><code class="language-bash">bin_PROGRAMS = my_program
+my_program_SOURCES = main.c
+</code></pre>
+<h3 id="mainc-内容"><a class="header" href="#mainc-内容"><code>main.c</code> 内容</a></h3>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+int main() {
+    printf("Hello, Autoconf!\n");
+    return 0;
+}
+</code></pre>
+<h3 id="使用流程"><a class="header" href="#使用流程">使用流程</a></h3>
+<ol>
+<li>
+<p><strong>生成 <code>configure</code> 脚本</strong>：
+在项目根目录下运行：</p>
+<pre><code class="language-bash">autoreconf --install
+</code></pre>
+</li>
+<li>
+<p><strong>配置项目</strong>：
+运行生成的 <code>configure</code> 脚本：</p>
+<pre><code class="language-bash">./configure
+</code></pre>
+</li>
+<li>
+<p><strong>编译项目</strong>：
+配置完成后，运行 <code>make</code> 编译：</p>
+<pre><code class="language-bash">make
+</code></pre>
+</li>
+<li>
+<p><strong>运行程序</strong>：
+你可以在 <code>src/</code> 目录下找到生成的可执行文件 <code>my_program</code>，并运行它：</p>
+<pre><code class="language-bash">./src/my_program
+</code></pre>
+</li>
+<li>
+<p><strong>安装程序</strong>：
+将编译好的程序安装到系统目录：</p>
+<pre><code class="language-bash">sudo make install
+</code></pre>
+</li>
+</ol>
+<h2 id="其他常用的宏"><a class="header" href="#其他常用的宏">其他常用的宏</a></h2>
+<ul>
+<li><strong>AC_PROG_CC</strong>：检测 C 编译器。</li>
+<li><strong>AC_CHECK_LIB([library], [function])</strong>：检测某个库是否存在。</li>
+<li><strong>AC_CHECK_HEADERS([header1 header2])</strong>：检测是否存在头文件。</li>
+<li><strong>AC_CONFIG_FILES([file1 file2])</strong>：指定要生成的 <code>Makefile</code> 列表。</li>
+</ul>
+<h2 id="总结"><a class="header" href="#总结">总结</a></h2>
+<p><code>autoconf</code> 是一个强大的工具，用于自动生成可移植的配置脚本，使源代码可以在不同平台上编译。典型的流程是通过编写 <code>configure.ac</code> 文件定义项目的配置要求，然后生成 <code>configure</code> 脚本，用户可以运行该脚本生成适合目标系统的 <code>Makefile</code>，并进行编译和安装。</p>
+<p>通过 <code>autoconf</code>，开发者可以简化跨平台构建的过程，确保项目在各种环境中都能正确编译。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="13-构建调试环境"><a class="header" href="#13-构建调试环境">1.3 构建调试环境</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="14-入口代码"><a class="header" href="#14-入口代码">1.4 入口代码</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="15-入口代码"><a class="header" href="#15-入口代码">1.5 入口代码</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第一章-tccc-主流程分析"><a class="header" href="#第一章-tccc-主流程分析">第一章 tcc.c 主流程分析</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第二章-编译的整体流程"><a class="header" href="#第二章-编译的整体流程">第二章 编译的整体流程</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第三章-词法分析"><a class="header" href="#第三章-词法分析">第三章 词法分析</a></h1>

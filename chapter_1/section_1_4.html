@@ -176,7 +176,7 @@
                         <h1 id="14-configmak-如何使用"><a class="header" href="#14-configmak-如何使用">1.4 config.mak 如何使用？</a></h1>
 <p>这段代码使用了 <code>make</code> 的条件判断和字符串查找功能，来决定是否包含外部的 <code>config.mak</code> 文件。让我们一步步分析每个部分的作用：</p>
 <pre><code class="language-makefile">ifeq ($(findstring $(MAKECMDGOALS),clean distclean),)
- include $(TOP)/config.mak
+    include $(TOP)/config.mak
 endif
 </code></pre>
 <h2 id="代码详细分析"><a class="header" href="#代码详细分析">代码详细分析</a></h2>

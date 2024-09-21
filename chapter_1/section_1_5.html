@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>1.5 入口代码 - TinyCC源码分析</title>
+        <title>1.5 构建调试环境 - TinyCC源码分析</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html" class="active">1.5 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/chapter_1.html">第一章 tcc.c 主流程分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="../chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="../chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="../chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="../chapter_6.html">第六章 代码生成</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak 如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html" class="active">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/chapter_1.html">第一章 tcc.c 主流程分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="../chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="../chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="../chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="../chapter_6.html">第六章 代码生成</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,7 +173,55 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="15-入口代码"><a class="header" href="#15-入口代码">1.5 入口代码</a></h1>
+                        <h1 id="15-构建调试环境"><a class="header" href="#15-构建调试环境">1.5 构建调试环境</a></h1>
+<p>在 .vscode 下建两个 json 配置文件</p>
+<h2 id="launchjson"><a class="header" href="#launchjson">launch.json</a></h2>
+<pre><code class="language-json">{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(lldb) Launch",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/tcc", // 替换为你的可执行文件路径
+            "args": ["a.c", "-o", "a.out"],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build with tcc",  // 用于编译任务
+        }
+    ]
+}
+</code></pre>
+<h2 id="tasksjson"><a class="header" href="#tasksjson">tasks.json</a></h2>
+<pre><code class="language-json">{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "build with tcc",
+            "command": "/usr/bin/make",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "调试器生成的任务。"
+        }
+    ],
+    "version": "2.0.0"
+}
+
+</code></pre>
+<h2 id="调整-configmak-的配置"><a class="header" href="#调整-configmak-的配置">调整 config.mak 的配置</a></h2>
+<pre><code>CFLAGS=-Wall -O0 -g -Wdeclaration-after-statement -fno-strict-aliasing -fheinous-gnu-extensions -Wno-pointer-sign -Wno-sign-compare -Wno-unused-result -Wno-string-plus-int -Wno-deprecated-declarations
+</code></pre>
+<h2 id="构建-tinycc"><a class="header" href="#构建-tinycc">构建 tinycc</a></h2>
+<pre><code class="language-bash">./configure
+make
+make test
+make install
+</code></pre>
 
                     </main>
 
@@ -183,7 +231,7 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../chapter_2/chapter_1.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../chapter_1/section_1_6.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -197,7 +245,7 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../chapter_2/chapter_1.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../chapter_1/section_1_6.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

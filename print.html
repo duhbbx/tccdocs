@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_4.html">1.4 构建调试环境</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_5.html">1.5 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="chapter_2/chapter_1.html">第一章 tcc.c 主流程分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="chapter_6.html">第六章 代码生成</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_4.html">1.4 config.mak 如何使用？</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="chapter_2/chapter_1.html">第一章 tcc.c 主流程分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="chapter_6.html">第六章 代码生成</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -579,7 +579,7 @@ LDFLAGS = -L/opt/arm/lib
 <li><code>Makefile</code> 通常会通过 <code>-include config.mak</code> 加载 <code>config.mak</code> 文件，允许用户根据自己的需求修改编译选项，而无需直接修改 <code>Makefile</code>。</li>
 <li><code>config.mak</code> 是项目灵活构建的关键部分，特别适合跨平台、不同环境的配置管理。</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="14-configmak-在-tinycc-中如何使用的"><a class="header" href="#14-configmak-在-tinycc-中如何使用的">1.4 config.mak 在 tinycc 中如何使用的？</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="14-configmak-如何使用"><a class="header" href="#14-configmak-如何使用">1.4 config.mak 如何使用？</a></h1>
 <p>这段代码使用了 <code>make</code> 的条件判断和字符串查找功能，来决定是否包含外部的 <code>config.mak</code> 文件。让我们一步步分析每个部分的作用：</p>
 <pre><code class="language-makefile">ifeq ($(findstring $(MAKECMDGOALS),clean distclean),)
  include $(TOP)/config.mak
@@ -651,7 +651,56 @@ endif
 <p>通过这种方式，可以避免在执行 <code>clean</code> 或 <code>distclean</code> 时加载不必要的配置文件，简化构建过程，并提高执行效率。</p>
 </li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="15-入口代码"><a class="header" href="#15-入口代码">1.5 入口代码</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="15-构建调试环境"><a class="header" href="#15-构建调试环境">1.5 构建调试环境</a></h1>
+<p>在 .vscode 下建两个 json 配置文件</p>
+<h2 id="launchjson"><a class="header" href="#launchjson">launch.json</a></h2>
+<pre><code class="language-json">{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(lldb) Launch",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/tcc", // 替换为你的可执行文件路径
+            "args": ["a.c", "-o", "a.out"],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build with tcc",  // 用于编译任务
+        }
+    ]
+}
+</code></pre>
+<h2 id="tasksjson"><a class="header" href="#tasksjson">tasks.json</a></h2>
+<pre><code class="language-json">{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "build with tcc",
+            "command": "/usr/bin/make",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "调试器生成的任务。"
+        }
+    ],
+    "version": "2.0.0"
+}
+
+</code></pre>
+<h2 id="调整-configmak-的配置"><a class="header" href="#调整-configmak-的配置">调整 config.mak 的配置</a></h2>
+<pre><code>CFLAGS=-Wall -O0 -g -Wdeclaration-after-statement -fno-strict-aliasing -fheinous-gnu-extensions -Wno-pointer-sign -Wno-sign-compare -Wno-unused-result -Wno-string-plus-int -Wno-deprecated-declarations
+</code></pre>
+<h2 id="构建-tinycc"><a class="header" href="#构建-tinycc">构建 tinycc</a></h2>
+<pre><code class="language-bash">./configure
+make
+make test
+make install
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="16-入口代码"><a class="header" href="#16-入口代码">1.6 入口代码</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第一章-tccc-主流程分析"><a class="header" href="#第一章-tccc-主流程分析">第一章 tcc.c 主流程分析</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第二章-编译的整体流程"><a class="header" href="#第二章-编译的整体流程">第二章 编译的整体流程</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第三章-词法分析"><a class="header" href="#第三章-词法分析">第三章 词法分析</a></h1>

@@ -443,7 +443,142 @@ int main() {
 <h2 id="总结"><a class="header" href="#总结">总结</a></h2>
 <p><code>autoconf</code> 是一个强大的工具，用于自动生成可移植的配置脚本，使源代码可以在不同平台上编译。典型的流程是通过编写 <code>configure.ac</code> 文件定义项目的配置要求，然后生成 <code>configure</code> 脚本，用户可以运行该脚本生成适合目标系统的 <code>Makefile</code>，并进行编译和安装。</p>
 <p>通过 <code>autoconf</code>，开发者可以简化跨平台构建的过程，确保项目在各种环境中都能正确编译。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="13-构建调试环境"><a class="header" href="#13-构建调试环境">1.3 构建调试环境</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="13-configmak的用法"><a class="header" href="#13-configmak的用法">1.3 config.mak的用法</a></h1>
+<p><code>config.mak</code> 是许多使用 <code>make</code> 的项目中常见的配置文件，特别是在那些采用自定义构建系统或者使用 GNU Autotools 工具链（如 <code>autoconf</code>、<code>automake</code>）的项目中。<code>config.mak</code> 文件通常用于覆盖 <code>Makefile</code> 中的默认设置，提供项目构建的灵活性。它允许开发人员根据系统的具体情况或个人需求调整编译选项、库路径等。</p>
+<h2 id="configmak-的用途"><a class="header" href="#configmak-的用途"><code>config.mak</code> 的用途</a></h2>
+<ul>
+<li><strong>编译器选项</strong>：指定编译器、编译选项（如 <code>CFLAGS</code>、<code>LDFLAGS</code> 等）。</li>
+<li><strong>库路径</strong>：设置库文件的路径和库的链接选项（如 <code>LIBS</code>）。</li>
+<li><strong>启用或禁用功能</strong>：定义条件编译的宏，控制项目的功能模块是否开启。</li>
+<li><strong>自定义变量</strong>：覆盖 <code>Makefile</code> 中定义的变量，便于灵活配置。</li>
+</ul>
+<h2 id="configmak-如何使用"><a class="header" href="#configmak-如何使用"><code>config.mak</code> 如何使用？</a></h2>
+<p>在项目构建中，<code>config.mak</code> 文件通常由 <code>Makefile</code> 引用。<code>Makefile</code> 会包含或检查是否存在 <code>config.mak</code>，然后使用其中的设置。例如：</p>
+<pre><code class="language-makefile"># Makefile
+# 加载 config.mak，如果存在
+-include config.mak
+
+# 编译器和编译标志
+CC = gcc
+CFLAGS = -Wall -O2
+
+# 如果在 config.mak 中有定义，会覆盖 Makefile 中的这些变量
+</code></pre>
+<h2 id="configmak-的常见配置项"><a class="header" href="#configmak-的常见配置项"><code>config.mak</code> 的常见配置项</a></h2>
+<p><code>config.mak</code> 文件的格式与 <code>Makefile</code> 相同，使用简单的变量赋值语法来定义编译器、链接器的选项，以及库路径等。以下是一些常见的配置选项：</p>
+<ol>
+<li>
+<p><strong>编译器选项</strong>：</p>
+<ul>
+<li><strong>CC</strong>：指定 C 编译器。</li>
+<li><strong>CXX</strong>：指定 C++ 编译器。</li>
+<li><strong>CFLAGS</strong>：C 编译器的标志，用于指定优化级别、调试信息等。</li>
+<li><strong>CXXFLAGS</strong>：C++ 编译器的标志，类似于 <code>CFLAGS</code>。</li>
+<li><strong>LDFLAGS</strong>：链接器标志，指定库的路径、链接时使用的标志等。</li>
+<li><strong>CPPFLAGS</strong>：C 预处理器的标志，用于添加头文件路径或定义预处理器宏。</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-makefile">CC = clang
+CFLAGS = -Wall -O3 -g
+CXXFLAGS = -std=c++11
+LDFLAGS = -L/usr/local/lib
+CPPFLAGS = -I/usr/local/include
+</code></pre>
+</li>
+<li>
+<p><strong>库链接选项</strong>：</p>
+<ul>
+<li><strong>LIBS</strong>：要链接的库，通常用于指定额外的库文件（如 <code>-lm</code> 链接数学库）。</li>
+<li><strong>LDLIBS</strong>：类似于 <code>LIBS</code>，可以链接动态库或静态库。</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-makefile">LIBS = -lm -lpthread
+</code></pre>
+</li>
+<li>
+<p><strong>目标平台和架构</strong>：</p>
+<ul>
+<li><strong>ARCH</strong>：目标平台的架构类型，如 <code>x86_64</code>、<code>arm</code>、<code>i386</code> 等。</li>
+<li><strong>HOST</strong>：目标主机系统类型，常用于交叉编译。</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-makefile">ARCH = x86_64
+HOST = arm-linux-gnueabihf
+</code></pre>
+</li>
+<li>
+<p><strong>调试和优化</strong>：</p>
+<ul>
+<li><strong>DEBUG</strong>：启用或禁用调试信息，通常通过 <code>-g</code> 标志来生成调试符号。</li>
+<li><strong>OPTIMIZE</strong>：控制优化级别，如 <code>-O2</code>、<code>-O3</code>。</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-makefile">DEBUG = -g
+OPTIMIZE = -O2
+</code></pre>
+</li>
+<li>
+<p><strong>启用或禁用特定功能</strong>：</p>
+<ul>
+<li><strong>ENABLE_FEATURE_X</strong>：通过定义宏，控制代码中某些模块的启用或禁用，通常配合条件编译。</li>
+<li><strong>DISABLE_SOMETHING</strong>：禁用某些功能。</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-makefile">ENABLE_FEATURE_X = 1
+DISABLE_SOMETHING = 0
+</code></pre>
+</li>
+</ol>
+<h2 id="configmak-的实际用法示例"><a class="header" href="#configmak-的实际用法示例"><code>config.mak</code> 的实际用法示例</a></h2>
+<p>假设你正在构建一个项目，项目需要根据不同平台或需求进行配置，而不想每次都手动修改 <code>Makefile</code>。你可以使用 <code>config.mak</code> 来实现不同的配置。</p>
+<h3 id="示例-1基本的-configmak-配置"><a class="header" href="#示例-1基本的-configmak-配置">示例 1：基本的 <code>config.mak</code> 配置</a></h3>
+<pre><code class="language-makefile"># config.mak
+CC = gcc
+CFLAGS = -Wall -O2 -g
+LDFLAGS = -L/usr/local/lib
+LIBS = -lm -lpthread
+</code></pre>
+<h3 id="示例-2条件编译"><a class="header" href="#示例-2条件编译">示例 2：条件编译</a></h3>
+<p>通过 <code>config.mak</code> 文件控制特定功能是否启用：</p>
+<pre><code class="language-makefile"># config.mak
+ENABLE_DEBUG = 1
+ENABLE_FEATURE_X = 0
+</code></pre>
+<p>在 <code>Makefile</code> 中使用这些变量：</p>
+<pre><code class="language-makefile"># Makefile
+-include config.mak
+
+CFLAGS = -Wall -O2
+
+# 如果启用了调试模式
+ifeq ($(ENABLE_DEBUG), 1)
+CFLAGS += -g
+endif
+
+# 如果启用了某个特性
+ifeq ($(ENABLE_FEATURE_X), 1)
+CFLAGS += -DENABLE_FEATURE_X
+endif
+</code></pre>
+<h3 id="示例-3交叉编译配置"><a class="header" href="#示例-3交叉编译配置">示例 3：交叉编译配置</a></h3>
+<p>你可以通过 <code>config.mak</code> 来指定不同平台的编译工具链和路径，这对于交叉编译非常有用。</p>
+<pre><code class="language-makefile"># config.mak
+CC = arm-linux-gnueabi-gcc
+CFLAGS = -Wall -O2
+LDFLAGS = -L/opt/arm/lib
+</code></pre>
+<h2 id="如何生成-configmak-文件"><a class="header" href="#如何生成-configmak-文件">如何生成 <code>config.mak</code> 文件？</a></h2>
+<p>通常，<code>config.mak</code> 文件可以是手动编写的，或者由项目的 <code>configure</code> 脚本自动生成。开发者可以根据项目需求，提前提供一个模板或者样例文件，用户可以复制并根据自己的系统情况修改。</p>
+<p>例如，某些项目可能提供一个 <code>config.mak.sample</code> 文件，用户可以将其复制并命名为 <code>config.mak</code>，然后根据需要进行修改。</p>
+<pre><code class="language-bash">cp config.mak.sample config.mak
+</code></pre>
+<h2 id="总结-1"><a class="header" href="#总结-1">总结</a></h2>
+<ul>
+<li><code>config.mak</code> 文件用于覆盖项目 <code>Makefile</code> 中的默认设置，提供了编译器、库路径、功能启用和禁用等选项的灵活配置。</li>
+<li>典型的 <code>config.mak</code> 用法包括定义编译选项（如 <code>CFLAGS</code>、<code>LDFLAGS</code>）、库路径、目标平台、调试选项以及条件编译的宏。</li>
+<li><code>Makefile</code> 通常会通过 <code>-include config.mak</code> 加载 <code>config.mak</code> 文件，允许用户根据自己的需求修改编译选项，而无需直接修改 <code>Makefile</code>。</li>
+<li><code>config.mak</code> 是项目灵活构建的关键部分，特别适合跨平台、不同环境的配置管理。</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="14-入口代码"><a class="header" href="#14-入口代码">1.4 入口代码</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="15-入口代码"><a class="header" href="#15-入口代码">1.5 入口代码</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第一章-tccc-主流程分析"><a class="header" href="#第一章-tccc-主流程分析">第一章 tcc.c 主流程分析</a></h1>

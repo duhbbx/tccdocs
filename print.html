@@ -579,7 +579,7 @@ LDFLAGS = -L/opt/arm/lib
 <li><code>Makefile</code> 通常会通过 <code>-include config.mak</code> 加载 <code>config.mak</code> 文件，允许用户根据自己的需求修改编译选项，而无需直接修改 <code>Makefile</code>。</li>
 <li><code>config.mak</code> 是项目灵活构建的关键部分，特别适合跨平台、不同环境的配置管理。</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="14-configmak-如何使用"><a class="header" href="#14-configmak-如何使用">1.4 config.mak 如何使用？</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="14-configmak如何使用"><a class="header" href="#14-configmak如何使用">1.4 config.mak如何使用？</a></h1>
 <p>这段代码使用了 <code>make</code> 的条件判断和字符串查找功能，来决定是否包含外部的 <code>config.mak</code> 文件。让我们一步步分析每个部分的作用：</p>
 <pre><code class="language-makefile">ifeq ($(findstring $(MAKECMDGOALS),clean distclean),)
     include $(TOP)/config.mak

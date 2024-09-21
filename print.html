@@ -89,7 +89,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_4.html">1.4 config.mak 如何使用？</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="chapter_2/chapter_1.html">第一章 tcc.c 主流程分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="chapter_6.html">第六章 代码生成</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="chapter_2/chapter_1.html">第一章 tcc.c 主流程分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="chapter_6.html">第六章 代码生成</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -851,6 +851,165 @@ redo: /* 使用了 label, why */
     return ret;
 }
 </code></pre>
+<h2 id="这段-main-函数详细分析"><a class="header" href="#这段-main-函数详细分析">这段 <code>main</code> 函数详细分析</a></h2>
+<p>这个 <code>main</code> 函数属于 <code>TinyCC</code>（TCC），一个小型 C 编译器的项目。该函数处理编译器的启动、命令行参数解析、文件编译和输出操作。让我们逐步分析每个部分的作用。</p>
+<h3 id="函数签名"><a class="header" href="#函数签名">函数签名</a></h3>
+<pre><code class="language-c">int main(int argc0, char **argv0)
+</code></pre>
+<ul>
+<li><strong><code>argc0</code></strong> 和 <strong><code>argv0</code></strong>：传递给程序的命令行参数。</li>
+<li><strong><code>argc0</code></strong>：参数个数。</li>
+<li><strong><code>argv0</code></strong>：包含所有命令行参数的字符串数组。</li>
+</ul>
+<h3 id="1-变量声明"><a class="header" href="#1-变量声明">1. 变量声明</a></h3>
+<pre><code class="language-c">TCCState *s, *s1;
+int ret, opt, n = 0, t = 0, done;
+unsigned start_time = 0, end_time = 0;
+const char *first_file;
+int argc;
+char **argv;
+FILE *ppfp = stdout;
+</code></pre>
+<ul>
+<li><strong><code>TCCState *s, *s1</code></strong>：<code>TCCState</code> 是 TCC 中用来表示编译器状态的结构体指针，<code>s</code> 和 <code>s1</code> 用于存储编译器的状态信息。</li>
+<li><strong><code>ret</code>、<code>opt</code>、<code>n</code>、<code>t</code>、<code>done</code></strong>：这些变量控制编译过程中的状态，如返回值、选项、处理文件的索引等。</li>
+<li><strong><code>start_time</code> 和 <code>end_time</code></strong>：记录编译的起止时间，用于性能基准测试。</li>
+<li><strong><code>first_file</code></strong>：存储第一个编译文件的名字。</li>
+<li><strong><code>argc</code> 和 <code>argv</code></strong>：本地变量，用来保存命令行参数。</li>
+<li><strong><code>ppfp</code></strong>：文件指针，初始指向 <code>stdout</code>，用于预处理输出。</li>
+</ul>
+<h3 id="2-redo-标签和初始化"><a class="header" href="#2-redo-标签和初始化">2. <code>redo</code> 标签和初始化</a></h3>
+<pre><code class="language-c">redo:
+argc = argc0, argv = argv0;
+s = s1 = tcc_new();
+</code></pre>
+<ul>
+<li><strong><code>redo</code></strong>：这是一个标签，用于控制流程跳转。<code>goto redo;</code> 用于在某些条件下重复执行。</li>
+<li><strong><code>tcc_new()</code></strong>：初始化编译器状态，创建一个新的 <code>TCCState</code> 对象。</li>
+</ul>
+<h3 id="3-命令行参数解析和预定义选项"><a class="header" href="#3-命令行参数解析和预定义选项">3. 命令行参数解析和预定义选项</a></h3>
+<pre><code class="language-c">#ifdef CONFIG_TCC_SWITCHES
+tcc_set_options(s, CONFIG_TCC_SWITCHES);
+#endif
+opt = tcc_parse_args(s, &amp;argc, &amp;argv, 1);
+if (opt &lt; 0)
+    return 1;
+</code></pre>
+<ul>
+<li><strong><code>tcc_set_options</code></strong>：设置编译器的预定义选项，<code>CONFIG_TCC_SWITCHES</code> 是编译器预定义的配置。</li>
+<li><strong><code>tcc_parse_args</code></strong>：解析命令行参数，将结果存储在 <code>opt</code> 中，如果解析失败，返回 <code>1</code> 退出程序。</li>
+</ul>
+<h3 id="4-处理特定的命令行选项"><a class="header" href="#4-处理特定的命令行选项">4. 处理特定的命令行选项</a></h3>
+<pre><code class="language-c">if (n == 0) {
+    if (opt == OPT_HELP) {
+        fputs(help, stdout);
+        return 0;
+    }
+    if (opt == OPT_M32 || opt == OPT_M64)
+        return tcc_tool_cross(s, argv, opt);
+    ...
+}
+</code></pre>
+<ul>
+<li>处理用户请求的特殊命令行选项，如 <code>OPT_HELP</code>、<code>OPT_M32</code> 等：
+<ul>
+<li><strong><code>OPT_HELP</code></strong>：输出帮助信息。</li>
+<li><strong><code>OPT_M32</code> / <code>OPT_M64</code></strong>：设置目标架构（32位或64位），通过 <code>tcc_tool_cross</code> 函数处理交叉编译的需求。</li>
+<li>其他选项如 <code>OPT_AR</code> 用于不同的编译器工具。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-处理文件"><a class="header" href="#5-处理文件">5. 处理文件</a></h3>
+<pre><code class="language-c">if (s-&gt;nb_files == 0) {
+    tcc_error_noabort("no input files");
+}
+else if (s-&gt;output_type == TCC_OUTPUT_PREPROCESS) {
+    if (s-&gt;outfile &amp;&amp; strcmp("-", s-&gt;outfile) != 0) {
+        ppfp = fopen(s-&gt;outfile, "wb");
+        if (!ppfp)
+            tcc_error_noabort("could not write '%s'", s-&gt;outfile);
+    }
+}
+</code></pre>
+<ul>
+<li>如果没有输入文件，返回错误。</li>
+<li>对于预处理输出 (<code>TCC_OUTPUT_PREPROCESS</code>)，将输出重定向到指定的文件。</li>
+</ul>
+<h3 id="6-编译文件"><a class="header" href="#6-编译文件">6. 编译文件</a></h3>
+<pre><code class="language-c">do {
+    struct filespec *f = s-&gt;files[n];
+    s-&gt;filetype = f-&gt;type;
+    if (f-&gt;type &amp; AFF_TYPE_LIB) {
+        ret = tcc_add_library_err(s, f-&gt;name);
+    } else {
+        if (!first_file)
+            first_file = f-&gt;name;
+        ret = tcc_add_file(s, f-&gt;name);
+    }
+    done = ret || ++n &gt;= s-&gt;nb_files;
+} while (!done &amp;&amp; (s-&gt;output_type != TCC_OUTPUT_OBJ || s-&gt;option_r));
+</code></pre>
+<ul>
+<li>使用 <code>do-while</code> 循环逐个处理文件：
+<ul>
+<li><strong><code>AFF_TYPE_LIB</code></strong>：检查文件类型是否为库文件，如果是，则通过 <code>tcc_add_library_err</code> 添加库文件。</li>
+<li><strong><code>tcc_add_file</code></strong>：编译文件。</li>
+<li>使用 <code>done</code> 标志确定是否处理完所有文件。</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-处理编译输出"><a class="header" href="#7-处理编译输出">7. 处理编译输出</a></h3>
+<pre><code class="language-c">if (s-&gt;output_type == TCC_OUTPUT_MEMORY) {
+    ret = tcc_run(s, argc, argv);
+} else {
+    if (!s-&gt;outfile)
+        s-&gt;outfile = default_outputfile(s, first_file);
+    if (!s-&gt;just_deps &amp;&amp; tcc_output_file(s, s-&gt;outfile)) {
+        ;
+    } else if (s-&gt;gen_deps)
+        gen_makedeps(s, s-&gt;outfile, s-&gt;deps_outfile);
+}
+</code></pre>
+<ul>
+<li>根据输出类型处理：
+<ul>
+<li><strong><code>TCC_OUTPUT_MEMORY</code></strong>：立即运行内存中的程序。</li>
+<li><strong>其他输出类型</strong>：如果有输出文件，生成目标文件或依赖文件。</li>
+</ul>
+</li>
+</ul>
+<h3 id="8-基准测试和错误处理"><a class="header" href="#8-基准测试和错误处理">8. 基准测试和错误处理</a></h3>
+<pre><code class="language-c">if (s-&gt;do_bench) {
+    end_time = getclock_ms();
+}
+if (s-&gt;nb_errors)
+    ret = 1;
+</code></pre>
+<ul>
+<li>如果启用了基准测试 (<code>do_bench</code>)，记录结束时间并计算编译时间。</li>
+<li>如果编译过程中有错误，设置返回值 <code>ret = 1</code>。</li>
+</ul>
+<h3 id="9-重复处理或结束"><a class="header" href="#9-重复处理或结束">9. 重复处理或结束</a></h3>
+<pre><code class="language-c">tcc_delete(s);
+if (!done) {
+    goto redo;
+}
+</code></pre>
+<ul>
+<li><strong><code>tcc_delete(s)</code></strong>：清理编译器状态。</li>
+<li>如果没有完成所有任务，通过 <code>goto redo</code> 重新开始。</li>
+</ul>
+<h2 id="总结-3"><a class="header" href="#总结-3">总结</a></h2>
+<p>这个 <code>main</code> 函数实现了 TCC 编译器的核心逻辑：</p>
+<ol>
+<li>初始化编译器状态。</li>
+<li>解析命令行参数并处理特定选项。</li>
+<li>根据命令行输入处理文件（编译、链接、生成输出）。</li>
+<li>基于不同的输出类型执行不同的操作，如生成目标文件或直接运行内存中的代码。</li>
+<li>处理错误和基准测试。</li>
+<li>支持通过 <code>goto</code> 标签重复处理多个编译任务。</li>
+</ol>
+<p>该函数通过标签和条件控制不同的流程，从而支持灵活的编译和文件处理。</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第一章-tccc-主流程分析"><a class="header" href="#第一章-tccc-主流程分析">第一章 tcc.c 主流程分析</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第二章-编译的整体流程"><a class="header" href="#第二章-编译的整体流程">第二章 编译的整体流程</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第三章-词法分析"><a class="header" href="#第三章-词法分析">第三章 词法分析</a></h1>

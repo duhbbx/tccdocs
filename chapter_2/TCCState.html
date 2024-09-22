@@ -466,7 +466,8 @@
 #endif
 
 #undef gnu_ext
-    s-&gt;gnu_ext = 1; // 因为这里需要堆 gnu_ext 赋值，之前可能会有这个 gnu_ext 的宏定义，所以需要取消
+    // 因为这里需要堆 gnu_ext 赋值，之前可能会有这个 gnu_ext 的宏定义，所以需要取消
+    s-&gt;gnu_ext = 1; 
     s-&gt;tcc_ext = 1;
     s-&gt;nocommon = 1;
     s-&gt;dollars_in_identifiers = 1; /*on by default like in gcc/clang*/
@@ -528,6 +529,7 @@
 </code></pre>
 <h2 id="using_globals"><a class="header" href="#using_globals">USING_GLOBALS</a></h2>
 <p>TODO</p>
+<h2 id="seg_size-是啥"><a class="header" href="#seg_size-是啥">seg_size 是啥？</a></h2>
 
                     </main>
 

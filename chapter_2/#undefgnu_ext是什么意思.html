@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>2.5 输出文件的类型定义 - TinyCC源码分析</title>
+        <title>#undef gnu_ext 是什么意思 - TinyCC源码分析</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/section_2_1.html">2.1 main 函数的 argc 和 argv</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_2.html">2.2 static的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/ppfp变量的作用.html">2.3 ppfp 变量的作用</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_4.html">2.4 C 语言中的枚举的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/输出文件的类型定义.html" class="active">2.5 输出文件的类型定义</a></li><li class="chapter-item expanded "><a href="../chapter_2/什么是目标文件.html">什么是目标文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/exe和dll文件的区别.html">2.6 exe和 dll 文件的区别</a></li><li class="chapter-item expanded "><a href="../chapter_2/c语言中预处理文件.html">c语言中预处理文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/类型的前置声明.html">类型的前置声明</a></li><li class="chapter-item expanded "><a href="../chapter_2/TCCState.html">2.5 TCCState</a></li><li class="chapter-item expanded "><a href="../chapter_2/#undefgnu_ext是什么意思.html">#undef gnu_ext 是什么意思</a></li><li class="chapter-item expanded "><a href="../chapter_2/C语言中的goto和label.html">2.6 C 语言中的 goto 和 label</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_7.html">2.7 tcc_parse_args: 命令行参数的解析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="../chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="../chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="../chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="../chapter_6.html">第六章 代码生成</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/section_2_1.html">2.1 main 函数的 argc 和 argv</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_2.html">2.2 static的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/ppfp变量的作用.html">2.3 ppfp 变量的作用</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_4.html">2.4 C 语言中的枚举的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/输出文件的类型定义.html">2.5 输出文件的类型定义</a></li><li class="chapter-item expanded "><a href="../chapter_2/什么是目标文件.html">什么是目标文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/exe和dll文件的区别.html">2.6 exe和 dll 文件的区别</a></li><li class="chapter-item expanded "><a href="../chapter_2/c语言中预处理文件.html">c语言中预处理文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/类型的前置声明.html">类型的前置声明</a></li><li class="chapter-item expanded "><a href="../chapter_2/TCCState.html">2.5 TCCState</a></li><li class="chapter-item expanded "><a href="../chapter_2/#undefgnu_ext是什么意思.html" class="active">#undef gnu_ext 是什么意思</a></li><li class="chapter-item expanded "><a href="../chapter_2/C语言中的goto和label.html">2.6 C 语言中的 goto 和 label</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_7.html">2.7 tcc_parse_args: 命令行参数的解析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="../chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="../chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="../chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="../chapter_6.html">第六章 代码生成</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,34 +173,66 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="输出文件的类型定义"><a class="header" href="#输出文件的类型定义">输出文件的类型定义</a></h1>
-<h2 id="类型定义"><a class="header" href="#类型定义">类型定义</a></h2>
-<p>在 libtcc.h 这个文件中定义了输出文件的类型。</p>
-<pre><code class="language-c">/* set output type. MUST BE CALLED before any compilation */
-LIBTCCAPI int tcc_set_output_type(TCCState *s, int output_type);
-
-// 输出的内容会在内存中运行
-#define TCC_OUTPUT_MEMORY   1 /* output will be run in memory */
-// 输出的是可执行文件
-#define TCC_OUTPUT_EXE      2 /* executable file */
-// 输出的是动态链接库
-#define TCC_OUTPUT_DLL      4 /* dynamic library */
-// 输出的是目标文件
-#define TCC_OUTPUT_OBJ      3 /* object file */
-// 输出的是预处理文件
-#define TCC_OUTPUT_PREPROCESS 5 /* only preprocess */
-
+                        <h1 id="undef-gnu_ext-是什么意思"><a class="header" href="#undef-gnu_ext-是什么意思">#undef gnu_ext 是什么意思</a></h1>
+<p>在 C 语言中，<code>#undef</code> 是一个预处理指令，它用于<strong>取消之前定义的宏</strong>。当你看到 <code>#undef gnu_ext</code> 时，它的意思是<strong>取消宏 <code>gnu_ext</code> 的定义</strong>，也就是说，在该行之后，<code>gnu_ext</code> 宏将不再有效。</p>
+<h2 id="详细解释"><a class="header" href="#详细解释">详细解释：</a></h2>
+<h2 id="1-宏定义define"><a class="header" href="#1-宏定义define">1. 宏定义（<code>#define</code>）</a></h2>
+<p>在 C 语言中，使用 <code>#define</code> 可以定义一个宏。例如：</p>
+<pre><code class="language-c">#define gnu_ext 1
 </code></pre>
+<p>这行代码将定义一个名为 <code>gnu_ext</code> 的宏，并将其值设置为 <code>1</code>。从此之后，<code>gnu_ext</code> 可以在代码中被引用，编译器在预处理时会将它替换为 <code>1</code>。</p>
+<h2 id="2-取消宏定义undef"><a class="header" href="#2-取消宏定义undef">2. 取消宏定义（<code>#undef</code>）</a></h2>
+<p><code>#undef</code> 用于取消宏定义。假设之前定义了 <code>gnu_ext</code> 宏：</p>
+<pre><code class="language-c">#define gnu_ext 1
+</code></pre>
+<p>然后在某个位置使用了 <code>#undef</code>：</p>
+<pre><code class="language-c">#undef gnu_ext
+</code></pre>
+<p>这行代码的作用是<strong>取消之前对 <code>gnu_ext</code> 的定义</strong>。从 <code>#undef</code> 那一行开始，<code>gnu_ext</code> 宏将不再有效。如果之后的代码尝试使用 <code>gnu_ext</code>，将会导致编译错误，或者根据编译器的实现，它可能会被视为未定义的标识符。</p>
+<h2 id="示例"><a class="header" href="#示例">示例：</a></h2>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+#define gnu_ext 1  // 定义宏 gnu_ext
+
+int main() {
+    #ifdef gnu_ext
+        printf("gnu_ext is defined: %d\n", gnu_ext);
+    #endif
+
+    #undef gnu_ext  // 取消宏 gnu_ext 的定义
+
+    #ifdef gnu_ext
+        printf("gnu_ext is still defined.\n");
+    #else
+        printf("gnu_ext is undefined.\n");
+    #endif
+
+    return 0;
+}
+</code></pre>
+<p><strong>输出</strong>：</p>
+<pre><code>gnu_ext is defined: 1
+gnu_ext is undefined.
+</code></pre>
+<p>在这个示例中，程序首先定义了宏 <code>gnu_ext</code> 并输出了它的值，然后通过 <code>#undef</code> 取消了 <code>gnu_ext</code> 的定义。之后，当程序尝试检查 <code>gnu_ext</code> 是否被定义时，发现它已经被取消，因此输出 "gnu_ext is undefined."。</p>
+<h2 id="什么时候使用-undef"><a class="header" href="#什么时候使用-undef">什么时候使用 <code>#undef</code>？</a></h2>
+<ul>
+<li><strong>取消不再需要的宏</strong>：当你在某个范围内定义了一个宏，但在之后不再需要该宏时，可以使用 <code>#undef</code> 取消它的定义，避免在后续代码中误用它。</li>
+<li><strong>避免宏冲突</strong>：有时不同的库或代码模块可能会使用相同的宏名，为避免冲突，你可以使用 <code>#undef</code> 取消某个宏的定义，以确保后续代码或第三方库不会受到影响。</li>
+<li><strong>调试和控制代码生成</strong>：你可以使用 <code>#undef</code> 控制条件编译。如果一个宏在多个地方被定义，通过 <code>#undef</code> 可以确保特定的条件编译路径不会被选择。</li>
+</ul>
+<h2 id="总结"><a class="header" href="#总结">总结</a></h2>
+<p><code>#undef gnu_ext</code> 的意思是<strong>取消对宏 <code>gnu_ext</code> 的定义</strong>。在 <code>#undef</code> 之后，<code>gnu_ext</code> 将不再是一个宏，不能再使用。如果代码中有多个地方定义了同名宏，<code>#undef</code> 可以有效防止宏冲突，并且帮助控制代码中的宏行为。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../chapter_2/section_2_4.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../chapter_2/TCCState.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../chapter_2/什么是目标文件.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../chapter_2/C语言中的goto和label.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -210,11 +242,11 @@ LIBTCCAPI int tcc_set_output_type(TCCState *s, int output_type);
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../chapter_2/section_2_4.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../chapter_2/TCCState.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../chapter_2/什么是目标文件.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../chapter_2/C语言中的goto和label.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

@@ -2664,8 +2664,8 @@ label1:
 <p><code>tcc_parse_args</code> 这个函数也非常之长。</p>
 <pre><code class="language-c">PUB_FUNC int tcc_parse_args(TCCState *s, int *pargc, char ***pargv, int optind)
 {
-    TCCState *s1 = s;
-    const TCCOption *popt;
+    TCCState *s1 = s; // 传进来的状态
+    const TCCOption *popt;  // TCCOption
     const char *optarg, *r;
     const char *run = NULL;
     int x;
@@ -2673,10 +2673,10 @@ label1:
     char **argv = *pargv;
     int argc = *pargc;
 
-    cstr_reset(&amp;s-&gt;linker_arg);
+    cstr_reset(&amp;s-&gt;linker_arg); // 重置链接参数
 
-    while (optind &lt; argc) {
-        r = argv[optind];
+    while (optind &lt; argc) { // optind 是选项的索引
+        r = argv[optind];   // 获取第 optind 变量，这个是入参，从第几个开始解析
         if (r[0] == '@' &amp;&amp; r[1] != '\0') {
             if (args_parser_listfile(s, r + 1, optind, &amp;argc, &amp;argv))
                 return -1;
@@ -3164,6 +3164,13 @@ LIBTCCAPI void my_function();
 <li><strong>可移植性和健壮性</strong>：这种防御性编程使得代码能够在不同的编译器和平台下更稳健地运行。</li>
 </ul>
 <p>通过这种方式，开发者可以写出更通用、更健壮的代码，在不同的编译环境中都能正常工作。</p>
+<h2 id="cstr_reset"><a class="header" href="#cstr_reset">cstr_reset</a></h2>
+<pre><code class="language-c">/* reset string to empty */
+ST_FUNC void cstr_reset(CString *cstr)
+{
+    cstr-&gt;size = 0;
+}
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第二章-编译的整体流程"><a class="header" href="#第二章-编译的整体流程">第二章 编译的整体流程</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第三章-词法分析"><a class="header" href="#第三章-词法分析">第三章 词法分析</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="第四章-语法分析"><a class="header" href="#第四章-语法分析">第四章 语法分析</a></h1>

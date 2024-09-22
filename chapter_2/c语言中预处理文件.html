@@ -1,0 +1,370 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>c语言中预处理文件 - TinyCC源码分析</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/section_2_1.html">2.1 main 函数的 argc 和 argv</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_2.html">2.2 static的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_3.html">2.3 ppfp 变量的作用</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_4.html">2.4 C 语言中的枚举的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/输出文件的类型定义.html">2.5 输出文件的类型定义</a></li><li class="chapter-item expanded "><a href="../chapter_2/什么是目标文件.html">什么是目标文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/exe和dll文件的区别.html">2.6 exe和 dll 文件的区别</a></li><li class="chapter-item expanded "><a href="../chapter_2/c语言中预处理文件.html" class="active">c语言中预处理文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_5.html">2.5 TCCState</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_6.html">2.6 C 语言中的 goto 和 label</a></li><li class="chapter-item expanded "><a href="../chapter_2/section_2_7.html">2.7 tcc_parse_args: 命令行参数的解析</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_2.html">第二章 编译的整体流程</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="../chapter_3.html">第三章 词法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="../chapter_4.html">第四章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="../chapter_5.html">第五章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="../chapter_6.html">第六章 代码生成</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">TinyCC源码分析</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="什么是-c-语言的预处理文件"><a class="header" href="#什么是-c-语言的预处理文件">什么是 C 语言的预处理文件</a></h1>
+<h2 id="什么是-c-语言的预处理文件-1"><a class="header" href="#什么是-c-语言的预处理文件-1">什么是 C 语言的预处理文件？</a></h2>
+<p><strong>预处理文件</strong> 是 C 语言编译过程中的一个中间产物，是经过<strong>预处理器</strong>处理后的源代码。C 语言的编译过程分为多个阶段，其中的<strong>预处理</strong>是第一步，预处理的结果就是生成一个预处理文件。该文件是原始源代码经过宏替换、头文件包含、条件编译等预处理指令处理后的代码。预处理文件通常以 <code>.i</code> 或 <code>.ii</code> 为扩展名，视具体的编译器而定。</p>
+<p>预处理文件并不直接参与最终的可执行文件生成，而是作为编译过程的中间结果，供后续编译器进一步编译为目标文件。</p>
+<h2 id="c-语言编译过程中的预处理步骤"><a class="header" href="#c-语言编译过程中的预处理步骤">C 语言编译过程中的预处理步骤</a></h2>
+<p>C 语言的编译过程可以分为四个阶段：</p>
+<ol>
+<li><strong>预处理</strong>：处理宏定义、头文件包含、条件编译等预处理指令。</li>
+<li><strong>编译</strong>：将经过预处理的源代码翻译成汇编代码。</li>
+<li><strong>汇编</strong>：将汇编代码转换为机器代码，生成目标文件（object file）。</li>
+<li><strong>链接</strong>：将多个目标文件和库文件链接成最终的可执行文件。</li>
+</ol>
+<h2 id="预处理文件生成过程"><a class="header" href="#预处理文件生成过程">预处理文件生成过程</a></h2>
+<p>在 C 语言中，预处理指令以 <code>#</code> 开头，常见的预处理指令有：</p>
+<ul>
+<li><code>#include</code>：包含头文件。</li>
+<li><code>#define</code>：定义宏。</li>
+<li><code>#ifdef</code> / <code>#ifndef</code> / <code>#if</code> / <code>#else</code> / <code>#endif</code>：条件编译。</li>
+<li><code>#undef</code>：取消宏定义。</li>
+<li><code>#pragma</code>：设置编译器的特定行为。</li>
+</ul>
+<p>预处理器在处理源代码时，会执行以下操作：</p>
+<ol>
+<li><strong>宏替换</strong>：将所有使用 <code>#define</code> 定义的宏替换为相应的内容。</li>
+<li><strong>头文件展开</strong>：将 <code>#include</code> 指令包含的头文件插入到源文件中，头文件内容会直接被复制到源文件中的 <code>#include</code> 位置。</li>
+<li><strong>条件编译</strong>：根据条件编译指令（如 <code>#ifdef</code>、<code>#if</code> 等）决定是否包含某些代码段。</li>
+<li><strong>去除注释</strong>：将源代码中的所有注释（<code>//</code> 和 <code>/* */</code>）都去除。</li>
+</ol>
+<p>生成的预处理文件是纯粹的 C 代码，不再包含任何预处理指令，预处理完成后，该文件将交由编译器进行编译。</p>
+<h2 id="如何生成预处理文件"><a class="header" href="#如何生成预处理文件">如何生成预处理文件</a></h2>
+<p>大多数 C 编译器提供了生成预处理文件的选项。以 <code>gcc</code> 为例，可以使用 <code>-E</code> 选项只进行预处理，而不进行编译：</p>
+<pre><code class="language-bash">gcc -E main.c -o main.i
+</code></pre>
+<ul>
+<li><code>-E</code>：表示只进行预处理，不进行编译、汇编和链接。</li>
+<li><code>main.i</code>：生成的预处理文件。</li>
+</ul>
+<p>这样，<code>gcc</code> 会处理所有的宏、头文件和条件编译指令，并将处理后的内容输出到 <code>main.i</code> 文件中。</p>
+<h2 id="预处理文件的内容"><a class="header" href="#预处理文件的内容">预处理文件的内容</a></h2>
+<p>预处理文件的内容与原始源代码不同，它是已经展开并处理过的代码，常见的变化包括：</p>
+<ol>
+<li>
+<p><strong>宏替换</strong>：所有的宏定义和使用都被展开，宏被替换为具体的代码。</p>
+<p>原始代码：</p>
+<pre><code class="language-c">#define PI 3.14
+float area = PI * r * r;
+</code></pre>
+<p>预处理后的代码：</p>
+<pre><code class="language-c">float area = 3.14 * r * r;
+</code></pre>
+</li>
+<li>
+<p><strong>头文件展开</strong>：所有 <code>#include</code> 指令包含的头文件会被替换为头文件中的具体内容。</p>
+<p>原始代码：</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+</code></pre>
+<p>预处理后的代码：</p>
+<pre><code class="language-c">// 展开 stdio.h 的内容
+extern FILE *stdin;
+extern FILE *stdout;
+extern FILE *stderr;
+</code></pre>
+</li>
+<li>
+<p><strong>条件编译</strong>：根据条件的不同，选择性地包含或排除代码。</p>
+<p>原始代码：</p>
+<pre><code class="language-c">#ifdef DEBUG
+printf("Debug mode\n");
+#endif
+</code></pre>
+<p>如果没有定义 <code>DEBUG</code>，预处理后的代码将不包含 <code>printf</code> 语句：</p>
+<pre><code class="language-c">// 代码被预处理器移除了，因为 DEBUG 没有定义
+</code></pre>
+</li>
+<li>
+<p><strong>去除注释</strong>：所有的注释都会被删除。</p>
+<p>原始代码：</p>
+<pre><code class="language-c">// 这是一个单行注释
+/* 这是一个多行注释 */
+int a = 10;
+</code></pre>
+<p>预处理后的代码：</p>
+<pre><code class="language-c">int a = 10;
+</code></pre>
+</li>
+</ol>
+<h2 id="预处理文件的作用"><a class="header" href="#预处理文件的作用">预处理文件的作用</a></h2>
+<ol>
+<li><strong>调试宏替换</strong>：预处理文件可以帮助开发者检查宏替换是否正确展开，确保复杂的宏定义在使用时得到预期的结果。</li>
+<li><strong>调试头文件包含问题</strong>：有时头文件的包含顺序可能会影响程序的编译。通过生成预处理文件，开发者可以清楚看到每个 <code>#include</code> 指令所包含的具体内容，帮助排查问题。</li>
+<li><strong>调试条件编译</strong>：条件编译指令常用于在不同环境下生成不同版本的代码。生成预处理文件可以帮助开发者确定哪些代码被编译器选择性包含，哪些代码被排除。</li>
+<li><strong>优化编译过程</strong>：生成预处理文件可以加速多次编译中不变的部分，尤其是当某些头文件包含了大量宏定义或复杂的逻辑时，使用预处理文件可以避免重复处理。</li>
+</ol>
+<h2 id="使用预处理文件的注意事项"><a class="header" href="#使用预处理文件的注意事项">使用预处理文件的注意事项</a></h2>
+<ol>
+<li>
+<p><strong>预处理文件的体积可能非常大</strong>：因为预处理器会展开所有宏和头文件，最终生成的预处理文件可能远比源代码大得多，尤其是在包含了大量标准库或第三方库时。</p>
+</li>
+<li>
+<p><strong>可读性下降</strong>：预处理文件已经展开了所有宏定义、条件编译和头文件，它不再是开发者编写的原始代码，读起来可能比较困难。</p>
+</li>
+<li>
+<p><strong>调试预处理指令问题</strong>：预处理文件是调试与预处理相关问题的一个重要工具，但它只显示预处理后的结果，开发者仍需从原始代码中查找和修改问题。</p>
+</li>
+</ol>
+<h2 id="示例"><a class="header" href="#示例">示例</a></h2>
+<h2 id="原始代码mainc"><a class="header" href="#原始代码mainc">原始代码（<code>main.c</code>）：</a></h2>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#define SQUARE(x) ((x) * (x))
+
+int main() {
+    int num = 5;
+    printf("The square of %d is %d\n", num, SQUARE(num));
+    return 0;
+}
+</code></pre>
+<h2 id="预处理文件maini"><a class="header" href="#预处理文件maini">预处理文件（<code>main.i</code>）：</a></h2>
+<pre><code class="language-c"># 1 "main.c"
+# 1 "&lt;built-in&gt;"
+# 1 "&lt;command-line&gt;"
+# 1 "main.c"
+# 1 "/usr/include/stdio.h" 1 3 4
+// stdio.h 文件的展开内容...
+extern FILE *stdin;
+extern FILE *stdout;
+extern FILE *stderr;
+// ...
+# 2 "main.c" 2
+int main() {
+    int num = 5;
+    printf("The square of %d is %d\n", num, ((num) * (num)));
+    return 0;
+}
+</code></pre>
+<p>在这个预处理文件中，<code>#include &lt;stdio.h&gt;</code> 被替换成了标准库的内容，宏 <code>SQUARE(x)</code> 也被替换为具体的表达式 <code>((x) * (x))</code>。</p>
+<h2 id="总结"><a class="header" href="#总结">总结</a></h2>
+<ul>
+<li><strong>预处理文件</strong>是 C 编译器生成的一个中间文件，包含了源代码经过宏替换、头文件展开和条件编译处理后的代码。</li>
+<li><strong>用途</strong>：用于帮助开发者检查预处理过程，调试宏定义、头文件包含和条件编译问题。</li>
+<li><strong>生成方式</strong>：通过编译器选项（如 <code>gcc -E</code>）可以生成预处理文件。</li>
+<li><strong>文件内容</strong>：预处理文件是纯粹的 C 代码，包含展开的宏、头文件和被保留的代码段，没有注释和预处理指令。</li>
+</ul>
+<p>预处理文件是编译器处理源代码的一个重要环节，它确保了代码能够在不同环境下进行正确编译，同时为开发者提供了灵活的宏和条件编译工具。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter_2/exe和dll文件的区别.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter_2/section_2_5.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter_2/exe和dll文件的区别.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter_2/section_2_5.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

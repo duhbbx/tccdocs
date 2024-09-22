@@ -192,19 +192,23 @@
         struct filespec *f = s-&gt;files[n];
         s-&gt;filetype = f-&gt;type;
         printf("#### 编译单个文件 -&gt; %s\n", f-&gt;name);
-        if (f-&gt;type &amp; AFF_TYPE_LIB) { printf("AFF_TYPE_LIB类型......... 使用枚举来判断\n");
+        if (f-&gt;type &amp; AFF_TYPE_LIB) {
+            printf("AFF_TYPE_LIB类型......... 使用枚举来判断\n");
             ret = tcc_add_library_err(s, f-&gt;name);
         } else {
             if (1 == s-&gt;verbose)
                 printf("-&gt; %s\n", f-&gt;name);
             if (!first_file)        // 为什么要有 first_file 呢?
                 first_file = f-&gt;name;
-            ret = tcc_add_file(s, f-&gt;name);  printf("tcc_add_file 是干啥的...........\n");
+            ret = tcc_add_file(s, f-&gt;name);
+            printf("tcc_add_file 是干啥的...........\n");
         }
-        done = ret || ++n &gt;= s-&gt;nb_files;  printf("判断是否 done了..................\n");
+        done = ret || ++n &gt;= s-&gt;nb_files;
+        printf("判断是否 done了..................\n");
     } while (!done &amp;&amp; (s-&gt;output_type != TCC_OUTPUT_OBJ || s-&gt;option_r));
 
-    if (s-&gt;do_bench) { printf("判断是否是 bench, 如果是的话计算时间");
+    if (s-&gt;do_bench) {
+        printf("判断是否是 bench, 如果是的话计算时间");
         end_time = getclock_ms();
     }
         

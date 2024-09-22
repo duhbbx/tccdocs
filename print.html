@@ -1575,6 +1575,12 @@ LIBTCCAPI int tcc_set_output_type(TCCState *s, int output_type);
 #define TCC_OUTPUT_PREPROCESS 5 /* only preprocess */
 
 </code></pre>
+<h2 id="默认的输出类型"><a class="header" href="#默认的输出类型">默认的输出类型</a></h2>
+<p>如果不指定输出类型的话，似乎在这里会指定为 exe：</p>
+<pre><code class="language-c">    if (s-&gt;output_type == 0)
+        s-&gt;output_type = TCC_OUTPUT_EXE;
+    tcc_set_output_type(s, s-&gt;output_type);
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="什么是目标文件"><a class="header" href="#什么是目标文件">什么是目标文件</a></h1>
 <h2 id="什么是目标文件-1"><a class="header" href="#什么是目标文件-1">什么是目标文件？</a></h2>
 <p><strong>目标文件</strong>（Object File）是由编译器将源代码（如 C、C++ 等语言）编译后生成的中间文件，通常是二进制格式。目标文件是构建可执行程序或库的一个中间步骤。它包含了机器指令、数据和必要的元数据，供链接器（Linker）使用，将多个目标文件链接成最终的可执行文件或库。</p>

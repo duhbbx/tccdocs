@@ -191,6 +191,12 @@ LIBTCCAPI int tcc_set_output_type(TCCState *s, int output_type);
 #define TCC_OUTPUT_PREPROCESS 5 /* only preprocess */
 
 </code></pre>
+<h2 id="默认的输出类型"><a class="header" href="#默认的输出类型">默认的输出类型</a></h2>
+<p>如果不指定输出类型的话，似乎在这里会指定为 exe：</p>
+<pre><code class="language-c">    if (s-&gt;output_type == 0)
+        s-&gt;output_type = TCC_OUTPUT_EXE;
+    tcc_set_output_type(s, s-&gt;output_type);
+</code></pre>
 
                     </main>
 

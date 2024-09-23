@@ -250,6 +250,25 @@
     return ret;
 }
 </code></pre>
+<h2 id="tcc_add_library_err"><a class="header" href="#tcc_add_library_err">tcc_add_library_err</a></h2>
+<pre><code class="language-c">if (f-&gt;type &amp; AFF_TYPE_LIB) {
+    printf("AFF_TYPE_LIB类型......... 使用枚举来判断\n");
+    ret = tcc_add_library_err(s, f-&gt;name);
+} else {
+</code></pre>
+<p>如果文件类型为 <code>AFF_TYPE_LIB</code> 时，就执行 <code>tcc_add_library_err</code> 这个函数。</p>
+<pre><code class="language-c">PUB_FUNC int tcc_add_library_err(TCCState *s1, const char *libname)
+{
+    int ret = tcc_add_library(s1, libname);
+    if (ret == FILE_NOT_FOUND)
+        tcc_error_noabort("library '%s' not found", libname);
+    return ret;
+}
+</code></pre>
+<p>将库文件加入进来，如果有报错的话就执行 <code>tcc_error_noabort</code> 返回报错。</p>
+<p><code>ret</code> 会用来判断是否 done 了:</p>
+<pre><code class="language-c">done = ret || ++n &gt;= s-&gt;nb_files;  printf("判断是否 done了..................\n");
+</code></pre>
 
                     </main>
 

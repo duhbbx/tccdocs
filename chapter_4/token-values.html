@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>2.3 ppfp 变量的作用 - TinyCC源码分析</title>
+        <title>token values - TinyCC源码分析</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/main函数的argc和argv.html">2.1 main 函数的 argc 和 argv</a></li><li class="chapter-item expanded "><a href="../chapter_2/static的用法.html">2.2 static的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/ppfp变量的作用.html" class="active">2.3 ppfp 变量的作用</a></li><li class="chapter-item expanded "><a href="../chapter_2/C语言中的枚举的用法.html">2.4 C 语言中的枚举的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/输出文件的类型定义.html">2.5 输出文件的类型定义</a></li><li class="chapter-item expanded "><a href="../chapter_2/什么是目标文件.html">2.6 什么是目标文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/exe和dll文件的区别.html">2.7 exe和 dll 文件的区别</a></li><li class="chapter-item expanded "><a href="../chapter_2/c语言中预处理文件.html">2.8 c语言中预处理文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/类型的前置声明.html">2.9 类型的前置声明</a></li><li class="chapter-item expanded "><a href="../chapter_2/TCCState.html">2.10 TCCState</a></li><li class="chapter-item expanded "><a href="../chapter_2/undefgnu_ext是什么意思.html">2.11 #undef gnu_ext 是什么意思</a></li><li class="chapter-item expanded "><a href="../chapter_2/tcc_parse_args命令行参数的解析.html">2.12 tcc_parse_args: 命令行参数的解析</a></li><li class="chapter-item expanded "><a href="../chapter_2/set_environment.html">2.13 set_environment</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_3/编译的整体流程.html">编译的整体流程</a></li><li class="chapter-item expanded "><a href="../chapter_3/ST_FUNC的用法.html">ST_FUNC的用法</a></li><li class="chapter-item expanded "><a href="../chapter_3/CString.html">CString</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_compile.html">tcc_compile</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_enter_state.html">tcc_enter_state</a></li><li class="chapter-item expanded "><a href="../chapter_3/preprocess_start.html">preprocess_start</a></li><li class="chapter-item expanded "><a href="../chapter_3/file.html">file</a></li><li class="chapter-item expanded "><a href="../chapter_3/tccgen_init.html">tccgen_init</a></li><li class="chapter-item expanded "><a href="../chapter_3/next.html">next</a></li><li class="chapter-item expanded "><a href="../chapter_3/decl.html">decl</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="../chapter_4/token-values.html">token values</a></li><li class="chapter-item expanded "><a href="../chapter_4/next_nomacro.html">next_nomacro</a></li><li class="chapter-item expanded "><a href="../chapter_4/define_find.html">define_find</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="../chapter_5/语法分析.html">第五章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="../chapter_6/语义分析.html">第六章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 7</li><li class="chapter-item expanded "><a href="../chapter_7/代码生成.html">第七章 代码生成</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/main函数的argc和argv.html">2.1 main 函数的 argc 和 argv</a></li><li class="chapter-item expanded "><a href="../chapter_2/static的用法.html">2.2 static的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/ppfp变量的作用.html">2.3 ppfp 变量的作用</a></li><li class="chapter-item expanded "><a href="../chapter_2/C语言中的枚举的用法.html">2.4 C 语言中的枚举的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/输出文件的类型定义.html">2.5 输出文件的类型定义</a></li><li class="chapter-item expanded "><a href="../chapter_2/什么是目标文件.html">2.6 什么是目标文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/exe和dll文件的区别.html">2.7 exe和 dll 文件的区别</a></li><li class="chapter-item expanded "><a href="../chapter_2/c语言中预处理文件.html">2.8 c语言中预处理文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/类型的前置声明.html">2.9 类型的前置声明</a></li><li class="chapter-item expanded "><a href="../chapter_2/TCCState.html">2.10 TCCState</a></li><li class="chapter-item expanded "><a href="../chapter_2/undefgnu_ext是什么意思.html">2.11 #undef gnu_ext 是什么意思</a></li><li class="chapter-item expanded "><a href="../chapter_2/tcc_parse_args命令行参数的解析.html">2.12 tcc_parse_args: 命令行参数的解析</a></li><li class="chapter-item expanded "><a href="../chapter_2/set_environment.html">2.13 set_environment</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_3/编译的整体流程.html">编译的整体流程</a></li><li class="chapter-item expanded "><a href="../chapter_3/ST_FUNC的用法.html">ST_FUNC的用法</a></li><li class="chapter-item expanded "><a href="../chapter_3/CString.html">CString</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_compile.html">tcc_compile</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_enter_state.html">tcc_enter_state</a></li><li class="chapter-item expanded "><a href="../chapter_3/preprocess_start.html">preprocess_start</a></li><li class="chapter-item expanded "><a href="../chapter_3/file.html">file</a></li><li class="chapter-item expanded "><a href="../chapter_3/tccgen_init.html">tccgen_init</a></li><li class="chapter-item expanded "><a href="../chapter_3/next.html">next</a></li><li class="chapter-item expanded "><a href="../chapter_3/decl.html">decl</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 4</li><li class="chapter-item expanded "><a href="../chapter_4/token-values.html" class="active">token values</a></li><li class="chapter-item expanded "><a href="../chapter_4/next_nomacro.html">next_nomacro</a></li><li class="chapter-item expanded "><a href="../chapter_4/define_find.html">define_find</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 5</li><li class="chapter-item expanded "><a href="../chapter_5/语法分析.html">第五章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 6</li><li class="chapter-item expanded "><a href="../chapter_6/语义分析.html">第六章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">chapter 7</li><li class="chapter-item expanded "><a href="../chapter_7/代码生成.html">第七章 代码生成</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,57 +173,116 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="23-ppfp-变量的作用"><a class="header" href="#23-ppfp-变量的作用">2.3 ppfp 变量的作用</a></h1>
-<h2 id="ppfp-出现的位置"><a class="header" href="#ppfp-出现的位置">ppfp 出现的位置</a></h2>
-<p>为啥叫 <code>ppfp</code> 呢？</p>
-<p><code>fp</code> 指的应该是 <code>FILE POINTER</code>，是一个文件指针。</p>
-<p>变量 <code>ppfp</code> 在 tcc.c 代码中出现的先后顺序如下。</p>
-<pre><code class="language-c">FILE *ppfp = stdout;  
-printf("ppfp 是啥,为什么取这个名字: ppfp 是指向 stdcout 的文件指针\n");
+                        <h1 id="token-value"><a class="header" href="#token-value">token value</a></h1>
+<pre><code class="language-c">/* token values */
 
-// 当输出文件的类型是预处理的时候
-} else if (s-&gt;output_type == TCC_OUTPUT_PREPROCESS) {
-    printf("tcc.c 只是进行预处理..................\n");
-    if (s-&gt;outfile &amp;&amp; 0!=strcmp("-",s-&gt;outfile)) {
-        ppfp = fopen(s-&gt;outfile, "wb");
-        if (!ppfp)
-            tcc_error_noabort("could not write '%s'", s-&gt;outfile);
-    }
-} else if (s-&gt;output_type == TCC_OUTPUT_OBJ &amp;&amp; !s-&gt;option_r) { printf("生成的是目标文件................\n");
+/* conditional ops */
+#define TOK_LAND  0x90
+#define TOK_LOR   0x91
+/* warning: the following compare tokens depend on i386 asm code */
+#define TOK_ULT 0x92
+#define TOK_UGE 0x93
+#define TOK_EQ  0x94
+#define TOK_NE  0x95
+#define TOK_ULE 0x96
+#define TOK_UGT 0x97
+#define TOK_Nset 0x98
+#define TOK_Nclear 0x99
+#define TOK_LT  0x9c
+#define TOK_GE  0x9d
+#define TOK_LE  0x9e
+#define TOK_GT  0x9f
 
+#define TOK_ISCOND(t) (t &gt;= TOK_LAND &amp;&amp; t &lt;= TOK_GT)
 
-// 将 ppfp 赋值给 state 的 ppfp
-s-&gt;ppfp = ppfp;
+#define TOK_DEC     0x80 /* -- */
+#define TOK_MID     0x81 /* inc/dec, to void constant */
+#define TOK_INC     0x82 /* ++ */
+#define TOK_UDIV    0x83 /* unsigned division */
+#define TOK_UMOD    0x84 /* unsigned modulo */
+#define TOK_PDIV    0x85 /* fast division with undefined rounding for pointers */
+#define TOK_UMULL   0x86 /* unsigned 32x32 -&gt; 64 mul */
+#define TOK_ADDC1   0x87 /* add with carry generation */
+#define TOK_ADDC2   0x88 /* add with carry use */
+#define TOK_SUBC1   0x89 /* add with carry generation */
+#define TOK_SUBC2   0x8a /* add with carry use */
+#define TOK_SHL     '&lt;' /* shift left */
+#define TOK_SAR     '&gt;' /* signed shift right */
+#define TOK_SHR     0x8b /* unsigned shift right */
+#define TOK_NEG     TOK_MID /* unary minus operation (for floats) */
 
-// 最后文件快结束的时候关闭文件指针
-if (ppfp &amp;&amp; ppfp != stdout)
-    fclose(ppfp);
+#define TOK_ARROW   0xa0 /* -&gt; */
+#define TOK_DOTS    0xa1 /* three dots */
+#define TOK_TWODOTS 0xa2 /* C++ token ? */
+#define TOK_TWOSHARPS 0xa3 /* ## preprocessing token */
+#define TOK_PLCHLDR 0xa4 /* placeholder token as defined in C99 */
+#define TOK_PPJOIN  (TOK_TWOSHARPS | SYM_FIELD) /* A '##' in a macro to mean pasting */
+#define TOK_SOTYPE  0xa7 /* alias of '(' for parsing sizeof (type) */
+
+/* assignment operators */
+#define TOK_A_ADD   0xb0
+#define TOK_A_SUB   0xb1
+#define TOK_A_MUL   0xb2
+#define TOK_A_DIV   0xb3
+#define TOK_A_MOD   0xb4
+#define TOK_A_AND   0xb5
+#define TOK_A_OR    0xb6
+#define TOK_A_XOR   0xb7
+#define TOK_A_SHL   0xb8
+#define TOK_A_SAR   0xb9
+
+#define TOK_ASSIGN(t) (t &gt;= TOK_A_ADD &amp;&amp; t &lt;= TOK_A_SAR)
+#define TOK_ASSIGN_OP(t) ("+-*/%&amp;|^&lt;&gt;"[t - TOK_A_ADD])
+
+/* tokens that carry values (in additional token string space / tokc) --&gt; */
+#define TOK_CCHAR   0xc0 /* char constant in tokc */
+#define TOK_LCHAR   0xc1
+#define TOK_CINT    0xc2 /* number in tokc */
+#define TOK_CUINT   0xc3 /* unsigned int constant */
+#define TOK_CLLONG  0xc4 /* long long constant */
+#define TOK_CULLONG 0xc5 /* unsigned long long constant */
+#define TOK_CLONG   0xc6 /* long constant */
+#define TOK_CULONG  0xc7 /* unsigned long constant */
+#define TOK_STR     0xc8 /* pointer to string in tokc */
+#define TOK_LSTR    0xc9
+#define TOK_CFLOAT  0xca /* float constant */
+#define TOK_CDOUBLE 0xcb /* double constant */
+#define TOK_CLDOUBLE 0xcc /* long double constant */
+#define TOK_PPNUM   0xcd /* preprocessor number */
+#define TOK_PPSTR   0xce /* preprocessor string */
+#define TOK_LINENUM 0xcf /* line number info */
+
+#define TOK_HAS_VALUE(t) (t &gt;= TOK_CCHAR &amp;&amp; t &lt;= TOK_LINENUM)
+
+#define TOK_EOF       (-1)  /* end of file */
+#define TOK_LINEFEED  10    /* line feed */
+
+/* all identifiers and strings have token above that */
+#define TOK_IDENT 256
+
+enum tcc_token {
+    TOK_LAST = TOK_IDENT - 1
+#define DEF(id, str) ,id
+#include "tcctok.h"
+#undef DEF
+};
+
+/* keywords: tok &gt;= TOK_IDENT &amp;&amp; tok &lt; TOK_UIDENT */
+#define TOK_UIDENT TOK_DEFINE
 </code></pre>
-<h2 id="tccstate-结构体中的-ppfp"><a class="header" href="#tccstate-结构体中的-ppfp">TCCState 结构体中的 ppfp</a></h2>
-<pre><code class="language-c">/* output file for preprocessing (-E) */
-FILE *ppfp;
-</code></pre>
-<p>所以 <code>ppfp</code> 就是一个指向预处理文件的文件指针，<code>pp</code> 指的就是 <code>pre processing</code>。</p>
-<p>在 <code>LIBTCCAPI TCCState *tcc_new(void)</code> 这个函数中给 <code>s-&gt;ppfp = stdout;</code> 赋值了 stdout。</p>
-<pre><code class="language-c">#endif
-    s-&gt;ppfp = stdout;
-    /* might be used in error() before preprocess_start() */
-    s-&gt;include_stack_ptr = s-&gt;include_stack;
-
-    tcc_set_lib_path(s, CONFIG_TCCDIR);
-    return s;
-}
+<h2 id="tok_has_value"><a class="header" href="#tok_has_value">TOK_HAS_VALUE</a></h2>
+<pre><code class="language-c">#define TOK_HAS_VALUE(t) (t &gt;= TOK_CCHAR &amp;&amp; t &lt;= TOK_LINENUM)
 </code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../chapter_2/static的用法.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../chapter_3/decl.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../chapter_2/C语言中的枚举的用法.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../chapter_4/next_nomacro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -233,11 +292,11 @@ FILE *ppfp;
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../chapter_2/static的用法.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../chapter_3/decl.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../chapter_2/C语言中的枚举的用法.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../chapter_4/next_nomacro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

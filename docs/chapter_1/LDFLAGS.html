@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>1.7 LDFLAGS属性 - TinyCC源码分析</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded "><a href="../chapter_1/LDFLAGS.html" class="active">1.7 LDFLAGS属性</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/main函数的argc和argv.html">2.1 main 函数的 argc 和 argv</a></li><li class="chapter-item expanded "><a href="../chapter_2/static的用法.html">2.2 static的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/ppfp变量的作用.html">2.3 ppfp 变量的作用</a></li><li class="chapter-item expanded "><a href="../chapter_2/C语言中的枚举的用法.html">2.4 C 语言中的枚举的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/输出文件的类型定义.html">2.5 输出文件的类型定义</a></li><li class="chapter-item expanded "><a href="../chapter_2/什么是目标文件.html">2.6 什么是目标文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/exe和dll文件的区别.html">2.7 exe和 dll 文件的区别</a></li><li class="chapter-item expanded "><a href="../chapter_2/c语言中预处理文件.html">2.8 c语言中预处理文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/类型的前置声明.html">2.9 类型的前置声明</a></li><li class="chapter-item expanded "><a href="../chapter_2/TCCState.html">2.10 TCCState</a></li><li class="chapter-item expanded "><a href="../chapter_2/undefgnu_ext是什么意思.html">2.11 #undef gnu_ext 是什么意思</a></li><li class="chapter-item expanded "><a href="../chapter_2/tcc_parse_args命令行参数的解析.html">2.12 tcc_parse_args: 命令行参数的解析</a></li><li class="chapter-item expanded "><a href="../chapter_2/set_environment.html">2.13 set_environment</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_3/编译的整体流程.html">编译的整体流程</a></li><li class="chapter-item expanded "><a href="../chapter_3/ST_FUNC的用法.html">ST_FUNC的用法</a></li><li class="chapter-item expanded "><a href="../chapter_3/CString.html">CString</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_compile.html">tcc_compile</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_enter_state.html">tcc_enter_state</a></li><li class="chapter-item expanded "><a href="../chapter_3/preprocess_start.html">preprocess_start</a></li><li class="chapter-item expanded "><a href="../chapter_3/file.html">file</a></li><li class="chapter-item expanded "><a href="../chapter_3/tccgen_init.html">tccgen_init</a></li><li class="chapter-item expanded "><a href="../chapter_3/next.html">next</a></li><li class="chapter-item expanded "><a href="../chapter_3/decl.html">decl</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="../chapter_4/token-values.html">token values</a></li><li class="chapter-item expanded "><a href="../chapter_4/next_nomacro.html">next_nomacro</a></li><li class="chapter-item expanded "><a href="../chapter_4/define_find.html">define_find</a></li><li class="chapter-item expanded "><a href="../chapter_4/table_ident.html">table_ident</a></li><li class="chapter-item expanded "><a href="../chapter_4/current_value_type.html">current_value_type</a></li><li class="chapter-item expanded "><a href="../chapter_4/scope.html">scope</a></li><li class="chapter-item expanded "><a href="../chapter_4/filespec.html">filespec</a></li><li class="chapter-item expanded "><a href="../chapter_4/include_ifdef_stack.html">include_ifdef_stack</a></li><li class="chapter-item expanded "><a href="../chapter_4/pack_stack_ptr.html">pack_stack_ptr</a></li><li class="chapter-item expanded "><a href="../chapter_4/macro_ptr.html">macro_ptr</a></li><li class="chapter-item expanded "><a href="../chapter_4/TOK_LINEFEED_TOK_EOF.html">TOK_LINEFEED_TOK_EOF</a></li><li class="chapter-item expanded "><a href="../chapter_4/string_slice.html">string_slice</a></li><li class="chapter-item expanded "><a href="../chapter_4/lldb如何指定源码中的函数？.html">lldb如何指定源码中的函数</a></li><li class="chapter-item expanded affix "><li class="part-title">第五章</li><li class="chapter-item expanded "><a href="../chapter_5/语法分析.html">第五章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第六章</li><li class="chapter-item expanded "><a href="../chapter_6/语义分析.html">第六章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第七章</li><li class="chapter-item expanded "><a href="../chapter_7/gen_function.html">gen_function</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">TinyCC源码分析</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="ldflags"><a class="header" href="#ldflags">LDFLAGS</a></h1>
+<p>在 Makefile 中有这么一段代码</p>
+<pre><code class="language-Makefile"> ifneq ($(CONFIG_debug),yes)
+  LDFLAGS += -s
+ endif
+</code></pre>
+<p>我在 Windows 下调试如果不去掉这个的话就不能打断点调试了，但是在 mac 下好像没有问题，研究下这个属性的设置。</p>
+<h1 id="作用"><a class="header" href="#作用">作用</a></h1>
+<p><code>LDFLAGS</code> 是用于编译过程中 <strong>链接器</strong> 阶段的环境变量。它包含传递给链接器（<code>ld</code> 或者 GCC 的链接阶段）的选项，用于指定如何处理目标文件、库、以及其他与链接相关的内容。</p>
+<h3 id="主要用途"><a class="header" href="#主要用途">主要用途</a></h3>
+<ul>
+<li>
+<p><strong>指定库的路径</strong>：<code>LDFLAGS</code> 可以用于告诉链接器到哪里去寻找静态库或共享库。例如：</p>
+<pre><code class="language-bash">LDFLAGS="-L/usr/local/lib"
+</code></pre>
+<p>这个命令告诉链接器在 <code>/usr/local/lib</code> 目录中查找库文件。</p>
+</li>
+<li>
+<p><strong>链接特定的库</strong>：通过 <code>-l</code> 选项，链接器可以链接到某些特定的库。这个选项通常与 <code>LDFLAGS</code> 一起使用，例如：</p>
+<pre><code class="language-bash">LDFLAGS="-lssl -lcrypto"
+</code></pre>
+<p>这将链接 <code>ssl</code> 和 <code>crypto</code> 库。</p>
+</li>
+<li>
+<p><strong>指定输出格式</strong>：你可以通过 <code>LDFLAGS</code> 向链接器传递控制输出文件格式的标志。例如，<code>-static</code> 标志用于静态链接所有库：</p>
+<pre><code class="language-bash">LDFLAGS="-static"
+</code></pre>
+</li>
+<li>
+<p><strong>其他链接器选项</strong>：<code>LDFLAGS</code> 也可以包含其他与链接有关的选项，比如：</p>
+<ul>
+<li><code>-s</code>：去掉符号表，减小可执行文件体积。</li>
+<li><code>-rpath</code>：为可执行文件设置运行时库搜索路径。</li>
+<li><code>-Wl,&lt;option&gt;</code>：传递特定的选项给链接器。例如，<code>-Wl,-rpath,/custom/lib</code> 告诉链接器在运行时查找 <code>/custom/lib</code> 路径中的库。</li>
+</ul>
+</li>
+</ul>
+<h3 id="常见使用示例"><a class="header" href="#常见使用示例">常见使用示例</a></h3>
+<p>假设你有一个源文件 <code>main.c</code>，并且你需要链接一个自定义的库 <code>mylib</code>，该库位于 <code>/usr/local/lib</code>，那么可以这样设置 <code>LDFLAGS</code>：</p>
+<pre><code class="language-bash">gcc -o main.o -c main.c
+gcc -o main main.o -L/usr/local/lib -lmylib
+</code></pre>
+<p>在 Makefile 中，你可以设置 <code>LDFLAGS</code> 变量，这样在链接阶段自动应用这些选项：</p>
+<pre><code class="language-makefile">LDFLAGS = -L/usr/local/lib -lmylib
+
+main: main.o
+    gcc -o main main.o $(LDFLAGS)
+</code></pre>
+<h3 id="总结"><a class="header" href="#总结">总结</a></h3>
+<p><code>LDFLAGS</code> 主要用于指定链接时的库路径、库文件、以及其他与链接器相关的选项。它通常出现在编译和链接过程中，特别是在构建复杂项目或使用 Makefile 时，<code>LDFLAGS</code> 是控制链接行为的关键变量。</p>
+<h1 id="ldflags---s-会怎么样为什么会导致无法调试打断点"><a class="header" href="#ldflags---s-会怎么样为什么会导致无法调试打断点">LDFLAGS += -s 会怎么样？为什么会导致无法调试打断点？</a></h1>
+<p>当你在 <code>LDFLAGS</code> 中添加 <code>-s</code> 选项时，链接器会在生成的可执行文件中<strong>删除符号表</strong>。符号表包含了变量、函数名及其地址等信息，调试器（如 <code>gdb</code>）正是依赖这些符号信息来提供断点调试、变量查看等功能的。</p>
+<h3 id="具体行为"><a class="header" href="#具体行为">具体行为</a></h3>
+<ul>
+<li><strong><code>-s</code> 选项</strong>：告诉链接器在生成的可执行文件中删除符号信息，以减小文件的大小。符号信息包括：
+<ul>
+<li>调试符号（例如函数名、变量名等）</li>
+<li>断点所需的代码地址映射</li>
+<li>调试信息如行号等</li>
+</ul>
+</li>
+</ul>
+<p>这就是为什么当你使用 <code>-s</code> 选项时，虽然程序可以正常编译和运行，但调试器无法使用调试功能，因为调试器无法找到相关的符号信息，也无法将代码与源文件行号正确对应。</p>
+<h3 id="为什么无法调试"><a class="header" href="#为什么无法调试">为什么无法调试？</a></h3>
+<ul>
+<li>当你尝试在一个被 <code>-s</code> 处理过的可执行文件中使用 <code>gdb</code> 或其他调试器时，由于符号表被删除，调试器无法知道可执行文件中的哪个机器代码对应源代码中的哪个函数或行。这使得你无法设置断点，也无法查看变量、调用栈等调试信息。</li>
+<li>即使你在编译时加了 <code>-g</code> 选项（生成调试信息），但由于在链接时使用了 <code>-s</code>，最终生成的可执行文件依然没有符号信息，导致调试功能失效。</li>
+</ul>
+<h3 id="解决方案"><a class="header" href="#解决方案">解决方案</a></h3>
+<p>如果你需要调试功能，请不要在 <code>LDFLAGS</code> 中使用 <code>-s</code> 选项。可以移除 <code>-s</code>，或仅在发布时使用它，而在开发和调试阶段不要启用。</p>
+<p>示例：</p>
+<pre><code class="language-bash">LDFLAGS += -L/usr/local/lib -lmylib  # 不加 -s
+</code></pre>
+<p>如果你确实想生成一个较小的可执行文件，但仍希望保留调试符号，你可以使用 <code>-g</code> 生成调试信息，而在需要时单独保留符号文件（使用 <code>strip --strip-debug</code> 只移除调试符号），这样可以在需要调试时加载外部符号文件。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter_1/section_1_6.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter_2/main函数的argc和argv.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter_1/section_1_6.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter_2/main函数的argc和argv.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

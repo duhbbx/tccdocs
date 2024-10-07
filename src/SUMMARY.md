@@ -14,6 +14,7 @@
 - [1.4 config.mak如何使用？](./chapter_1/section_1_4.md)
 - [1.5 构建调试环境](./chapter_1/section_1_5.md)
 - [1.6 入口代码](./chapter_1/section_1_6.md)
+- [1.7 LDFLAGS属性](./chapter_1/LDFLAGS.md)
 
 # 第二章
 

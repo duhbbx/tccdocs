@@ -15,7 +15,7 @@ check_changes: $(SRC_DIR)/*.md Makefile
 
 	# 提交并推送到远程仓库
 	@echo "提交并推送更改到远程仓库..."
-	@git add . && git commit -m "Update book content" && git push origin gh-pages
+	@git add . && git commit -m "Update book content,呵呵" && git push origin gh-pages
 
 	@echo "操作完成！"
 

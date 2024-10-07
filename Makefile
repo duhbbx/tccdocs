@@ -1,5 +1,5 @@
 # 定义变量
-BOOK_DIR = book
+BOOK_DIR = docs
 SRC_DIR = src
 
 # 检查文件修改，并构建书籍

@@ -66,6 +66,8 @@
 - [lldb如何指定源码中的函数](./chapter_4/lldb如何指定源码中的函数？.md)
 - [skip_to_eol](./chapter_4/skip_to_eol.md)
 - [什么时候切换到另一个文件](./chapter_4/什么时候切换到另一个文件.md)
+- [one_source和static函数](./chapter_4/one_source和static函数.md)
+- [type_decl](./chapter_4/type_decl.md)
 
 
 # 第五章

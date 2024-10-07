@@ -1,0 +1,754 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>2.12 tcc_parse_args: 命令行参数的解析 - TinyCC源码分析</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/main函数的argc和argv.html">2.1 main 函数的 argc 和 argv</a></li><li class="chapter-item expanded "><a href="../chapter_2/static的用法.html">2.2 static的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/ppfp变量的作用.html">2.3 ppfp 变量的作用</a></li><li class="chapter-item expanded "><a href="../chapter_2/C语言中的枚举的用法.html">2.4 C 语言中的枚举的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/输出文件的类型定义.html">2.5 输出文件的类型定义</a></li><li class="chapter-item expanded "><a href="../chapter_2/什么是目标文件.html">2.6 什么是目标文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/exe和dll文件的区别.html">2.7 exe和 dll 文件的区别</a></li><li class="chapter-item expanded "><a href="../chapter_2/c语言中预处理文件.html">2.8 c语言中预处理文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/类型的前置声明.html">2.9 类型的前置声明</a></li><li class="chapter-item expanded "><a href="../chapter_2/TCCState.html">2.10 TCCState</a></li><li class="chapter-item expanded "><a href="../chapter_2/undefgnu_ext是什么意思.html">2.11 #undef gnu_ext 是什么意思</a></li><li class="chapter-item expanded "><a href="../chapter_2/tcc_parse_args命令行参数的解析.html" class="active">2.12 tcc_parse_args: 命令行参数的解析</a></li><li class="chapter-item expanded "><a href="../chapter_2/set_environment.html">2.13 set_environment</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_3/编译的整体流程.html">编译的整体流程</a></li><li class="chapter-item expanded "><a href="../chapter_3/ST_FUNC的用法.html">ST_FUNC的用法</a></li><li class="chapter-item expanded "><a href="../chapter_3/CString.html">CString</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_compile.html">tcc_compile</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_enter_state.html">tcc_enter_state</a></li><li class="chapter-item expanded "><a href="../chapter_3/preprocess_start.html">preprocess_start</a></li><li class="chapter-item expanded "><a href="../chapter_3/file.html">file</a></li><li class="chapter-item expanded "><a href="../chapter_3/tccgen_init.html">tccgen_init</a></li><li class="chapter-item expanded "><a href="../chapter_3/next.html">next</a></li><li class="chapter-item expanded "><a href="../chapter_3/decl.html">decl</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="../chapter_4/token-values.html">token values</a></li><li class="chapter-item expanded "><a href="../chapter_4/next_nomacro.html">next_nomacro</a></li><li class="chapter-item expanded "><a href="../chapter_4/define_find.html">define_find</a></li><li class="chapter-item expanded "><a href="../chapter_4/table_ident.html">table_ident</a></li><li class="chapter-item expanded "><a href="../chapter_4/current_value_type.html">current_value_type</a></li><li class="chapter-item expanded "><a href="../chapter_4/scope.html">scope</a></li><li class="chapter-item expanded "><a href="../chapter_4/filespec.html">filespec</a></li><li class="chapter-item expanded "><a href="../chapter_4/include_ifdef_stack.html">include_ifdef_stack</a></li><li class="chapter-item expanded "><a href="../chapter_4/pack_stack_ptr.html">pack_stack_ptr</a></li><li class="chapter-item expanded "><a href="../chapter_4/macro_ptr.html">macro_ptr</a></li><li class="chapter-item expanded "><a href="../chapter_4/TOK_LINEFEED_TOK_EOF.html">TOK_LINEFEED_TOK_EOF</a></li><li class="chapter-item expanded "><a href="../chapter_4/string_slice.html">string_slice</a></li><li class="chapter-item expanded "><a href="../chapter_4/lldb如何指定源码中的函数？.html">lldb如何指定源码中的函数</a></li><li class="chapter-item expanded affix "><li class="part-title">第五章</li><li class="chapter-item expanded "><a href="../chapter_5/语法分析.html">第五章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第六章</li><li class="chapter-item expanded "><a href="../chapter_6/语义分析.html">第六章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第七章</li><li class="chapter-item expanded "><a href="../chapter_7/gen_function.html">gen_function</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">TinyCC源码分析</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="27-tcc_parse_args-命令行参数的解析"><a class="header" href="#27-tcc_parse_args-命令行参数的解析">2.7 tcc_parse_args: 命令行参数的解析</a></h1>
+<h2 id="调用"><a class="header" href="#调用">调用</a></h2>
+<p>在 main 函数中是这么调用的：</p>
+<pre><code class="language-c">opt = tcc_parse_args(s, &amp;argc, &amp;argv, 1);
+</code></pre>
+<h2 id="函数定义"><a class="header" href="#函数定义">函数定义</a></h2>
+<p><code>tcc_parse_args</code> 这个函数也非常之长。</p>
+<pre><code class="language-c">PUB_FUNC int tcc_parse_args(TCCState *s, int *pargc, char ***pargv, int optind)
+{
+    TCCState *s1 = s; // 传进来的状态
+    const TCCOption *popt;  // TCCOption
+    const char *optarg, *r;
+    const char *run = NULL;
+    int x;
+    int tool = 0, arg_start = 0, noaction = optind;
+    char **argv = *pargv;
+    int argc = *pargc;
+
+    cstr_reset(&amp;s-&gt;linker_arg); // 重置链接参数
+
+    while (optind &lt; argc) { // optind 是选项的索引
+        r = argv[optind];   // 获取第 optind 变量，这个是入参，从第几个开始解析
+        if (r[0] == '@' &amp;&amp; r[1] != '\0') {
+            if (args_parser_listfile(s, r + 1, optind, &amp;argc, &amp;argv))
+                return -1;
+            continue;
+        }
+        optind++;
+        if (tool) {
+            if (r[0] == '-' &amp;&amp; r[1] == 'v' &amp;&amp; r[2] == 0)
+                ++s-&gt;verbose;
+            continue;
+        }
+reparse:
+        if (r[0] != '-' || r[1] == '\0') {
+            args_parser_add_file(s, r, s-&gt;filetype);
+            if (run) {
+dorun:
+                if (tcc_set_options(s, run))
+                    return -1;
+                arg_start = optind - 1;
+                break;
+            }
+            continue;
+        }
+
+        /* allow "tcc files... -run -- args ..." */
+        if (r[1] == '-' &amp;&amp; r[2] == '\0' &amp;&amp; run)
+            goto dorun;
+
+        /* find option in table */
+        for(popt = tcc_options; ; ++popt) {
+            const char *p1 = popt-&gt;name;
+            const char *r1 = r + 1;
+            if (p1 == NULL)
+                return tcc_error_noabort("invalid option -- '%s'", r);
+            if (!strstart(p1, &amp;r1))
+                continue;
+            optarg = r1;
+            if (popt-&gt;flags &amp; TCC_OPTION_HAS_ARG) {
+                if (*r1 == '\0' &amp;&amp; !(popt-&gt;flags &amp; TCC_OPTION_NOSEP)) {
+                    if (optind &gt;= argc)
+                arg_err:
+                        return tcc_error_noabort("argument to '%s' is missing", r);
+                    optarg = argv[optind++];
+                }
+            } else if (*r1 != '\0')
+                continue;
+            break;
+        }
+
+        switch(popt-&gt;index) {
+        case TCC_OPTION_HELP:
+            x = OPT_HELP;
+            goto extra_action;
+        case TCC_OPTION_HELP2:
+            x = OPT_HELP2;
+            goto extra_action;
+        case TCC_OPTION_I:
+            tcc_add_include_path(s, optarg);
+            break;
+        case TCC_OPTION_D:
+            tcc_define_symbol(s, optarg, NULL);
+            break;
+        case TCC_OPTION_U:
+            tcc_undefine_symbol(s, optarg);
+            break;
+        case TCC_OPTION_L:
+            tcc_add_library_path(s, optarg);
+            break;
+        case TCC_OPTION_B:
+            /* set tcc utilities path (mainly for tcc development) */
+            tcc_set_lib_path(s, optarg);
+            ++noaction;
+            break;
+        case TCC_OPTION_l:
+            args_parser_add_file(s, optarg, AFF_TYPE_LIB | (s-&gt;filetype &amp; ~AFF_TYPE_MASK));
+            s-&gt;nb_libraries++;
+            break;
+        case TCC_OPTION_pthread:
+            s-&gt;option_pthread = 1;
+            break;
+        case TCC_OPTION_bench:
+            s-&gt;do_bench = 1;
+            break;
+#ifdef CONFIG_TCC_BACKTRACE
+        case TCC_OPTION_bt:
+            s-&gt;rt_num_callers = atoi(optarg); /* zero = default (6) */
+            goto enable_backtrace;
+        enable_backtrace:
+            s-&gt;do_backtrace = 1;
+            s-&gt;do_debug = s-&gt;do_debug ? s-&gt;do_debug : 1;
+	    s-&gt;dwarf = DWARF_VERSION;
+            break;
+#ifdef CONFIG_TCC_BCHECK
+        case TCC_OPTION_b:
+            s-&gt;do_bounds_check = 1;
+            goto enable_backtrace;
+#endif
+#endif
+        case TCC_OPTION_g:
+            s-&gt;do_debug = 2;
+            s-&gt;dwarf = DWARF_VERSION;
+            if (strstart("dwarf", &amp;optarg)) {
+                s-&gt;dwarf = (*optarg) ? (0 - atoi(optarg)) : DEFAULT_DWARF_VERSION;
+            } else if (isnum(*optarg)) {
+                x = *optarg - '0';
+                /* -g0 = no info, -g1 = lines/functions only, -g2 = full info */
+                s-&gt;do_debug = x &gt; 2 ? 2 : x == 0 &amp;&amp; s-&gt;do_backtrace ? 1 : x;
+#ifdef TCC_TARGET_PE
+            } else if (0 == strcmp(".pdb", optarg)) {
+                s-&gt;dwarf = 5, s-&gt;do_debug |= 16;
+#endif
+            }
+            break;
+        case TCC_OPTION_c:
+            x = TCC_OUTPUT_OBJ;
+        set_output_type:
+            if (s-&gt;output_type)
+                tcc_warning("-%s: overriding compiler action already specified", popt-&gt;name);
+            s-&gt;output_type = x;
+            break;
+        case TCC_OPTION_d:
+            if (*optarg == 'D')
+                s-&gt;dflag = 3;
+            else if (*optarg == 'M')
+                s-&gt;dflag = 7;
+            else if (*optarg == 't')
+                s-&gt;dflag = 16;
+            else if (isnum(*optarg))
+                s-&gt;g_debug |= atoi(optarg);
+            else
+                goto unsupported_option;
+            break;
+        case TCC_OPTION_static:
+            s-&gt;static_link = 1;
+            break;
+        case TCC_OPTION_std:
+            if (strcmp(optarg, "=c11") == 0)
+                s-&gt;cversion = 201112;
+            break;
+        case TCC_OPTION_shared:
+            x = TCC_OUTPUT_DLL;
+            goto set_output_type;
+        case TCC_OPTION_soname:
+            s-&gt;soname = tcc_strdup(optarg);
+            break;
+        case TCC_OPTION_o:
+            if (s-&gt;outfile) {
+                tcc_warning("multiple -o option");
+                tcc_free(s-&gt;outfile);
+            }
+            s-&gt;outfile = tcc_strdup(optarg);
+            break;
+        case TCC_OPTION_r:
+            /* generate a .o merging several output files */
+            s-&gt;option_r = 1;
+            x = TCC_OUTPUT_OBJ;
+            goto set_output_type;
+        case TCC_OPTION_isystem:
+            tcc_add_sysinclude_path(s, optarg);
+            break;
+        case TCC_OPTION_include:
+            cstr_printf(&amp;s-&gt;cmdline_incl, "#include \"%s\"\n", optarg);
+            break;
+        case TCC_OPTION_nostdinc:
+            s-&gt;nostdinc = 1;
+            break;
+        case TCC_OPTION_nostdlib:
+            s-&gt;nostdlib = 1;
+            break;
+        case TCC_OPTION_run:
+#ifndef TCC_IS_NATIVE
+            return tcc_error_noabort("-run is not available in a cross compiler");
+#else
+            run = optarg;
+            x = TCC_OUTPUT_MEMORY;
+            goto set_output_type;
+#endif
+        case TCC_OPTION_v:
+            do ++s-&gt;verbose; while (*optarg++ == 'v');
+            ++noaction;
+            break;
+        case TCC_OPTION_f:
+            if (set_flag(s, options_f, optarg) &lt; 0)
+                goto unsupported_option;
+            break;
+#ifdef TCC_TARGET_ARM
+        case TCC_OPTION_mfloat_abi:
+            /* tcc doesn't support soft float yet */
+            if (!strcmp(optarg, "softfp")) {
+                s-&gt;float_abi = ARM_SOFTFP_FLOAT;
+            } else if (!strcmp(optarg, "hard"))
+                s-&gt;float_abi = ARM_HARD_FLOAT;
+            else
+                return tcc_error_noabort("unsupported float abi '%s'", optarg);
+            break;
+#endif
+        case TCC_OPTION_m:
+            if (set_flag(s, options_m, optarg) &lt; 0) {
+                if (x = atoi(optarg), x != 32 &amp;&amp; x != 64)
+                    goto unsupported_option;
+                if (PTR_SIZE != x/8)
+                    return x;
+                ++noaction;
+            }
+            break;
+        case TCC_OPTION_W:
+            s-&gt;warn_none = 0;
+            if (optarg[0] &amp;&amp; set_flag(s, options_W, optarg) &lt; 0)
+                goto unsupported_option;
+            break;
+        case TCC_OPTION_w:
+            s-&gt;warn_none = 1;
+            break;
+        case TCC_OPTION_rdynamic:
+            s-&gt;rdynamic = 1;
+            break;
+        case TCC_OPTION_Wl:
+            if (s-&gt;linker_arg.size)
+                ((char*)s-&gt;linker_arg.data)[s-&gt;linker_arg.size - 1] = ',';
+            cstr_cat(&amp;s-&gt;linker_arg, optarg, 0);
+            x = tcc_set_linker(s, s-&gt;linker_arg.data);
+            if (x)
+                cstr_reset(&amp;s-&gt;linker_arg);
+            if (x &lt; 0)
+                return -1;
+            break;
+        case TCC_OPTION_Wp:
+            r = optarg;
+            goto reparse;
+        case TCC_OPTION_E:
+            x = TCC_OUTPUT_PREPROCESS;
+            goto set_output_type;
+        case TCC_OPTION_P:
+            s-&gt;Pflag = atoi(optarg) + 1;
+            break;
+        case TCC_OPTION_M:
+            s-&gt;include_sys_deps = 1;
+            // fall through
+        case TCC_OPTION_MM:
+            s-&gt;just_deps = 1;
+            if(!s-&gt;deps_outfile)
+                s-&gt;deps_outfile = tcc_strdup("-");
+            // fall through
+        case TCC_OPTION_MMD:
+            s-&gt;gen_deps = 1;
+            break;
+        case TCC_OPTION_MD:
+            s-&gt;gen_deps = 1;
+            s-&gt;include_sys_deps = 1;
+            break;
+        case TCC_OPTION_MF:
+            s-&gt;deps_outfile = tcc_strdup(optarg);
+            break;
+        case TCC_OPTION_MP:
+            s-&gt;gen_phony_deps = 1;
+            break;
+        case TCC_OPTION_dumpmachine:
+            printf("%s\n", dumpmachine_str);
+            exit(0);
+        case TCC_OPTION_dumpversion:
+            printf ("%s\n", TCC_VERSION);
+            exit(0);
+        case TCC_OPTION_x:
+            x = 0;
+            if (*optarg == 'c')
+                x = AFF_TYPE_C;
+            else if (*optarg == 'a')
+                x = AFF_TYPE_ASMPP;
+            else if (*optarg == 'b')
+                x = AFF_TYPE_BIN;
+            else if (*optarg == 'n')
+                x = AFF_TYPE_NONE;
+            else
+                tcc_warning("unsupported language '%s'", optarg);
+            s-&gt;filetype = x | (s-&gt;filetype &amp; ~AFF_TYPE_MASK);
+            break;
+        case TCC_OPTION_O:
+            s-&gt;optimize = atoi(optarg);
+            break;
+        case TCC_OPTION_print_search_dirs:
+            x = OPT_PRINT_DIRS;
+            goto extra_action;
+        case TCC_OPTION_impdef:
+            x = OPT_IMPDEF;
+            goto extra_action;
+#if defined TCC_TARGET_MACHO
+        case TCC_OPTION_dynamiclib:
+            x = TCC_OUTPUT_DLL;
+            goto set_output_type;
+        case TCC_OPTION_flat_namespace:
+	     break;
+        case TCC_OPTION_two_levelnamespace:
+	     break;
+        case TCC_OPTION_undefined:
+	     break;
+        case TCC_OPTION_install_name:
+	    s-&gt;install_name = tcc_strdup(optarg);
+            break;
+        case TCC_OPTION_compatibility_version:
+	    s-&gt;compatibility_version = parse_version(s, optarg);
+            break;
+        case TCC_OPTION_current_version:
+	    s-&gt;current_version = parse_version(s, optarg);;
+            break;
+#endif
+        case TCC_OPTION_ar:
+            x = OPT_AR;
+        extra_action:
+            arg_start = optind - 1;
+            if (arg_start != noaction)
+                return tcc_error_noabort("cannot parse %s here", r);
+            tool = x;
+            break;
+        default:
+unsupported_option:
+            tcc_warning_c(warn_unsupported)("unsupported option '%s'", r);
+            break;
+        }
+    }
+    if (s-&gt;linker_arg.size) {
+        r = s-&gt;linker_arg.data;
+        goto arg_err;
+    }
+    *pargc = argc - arg_start;
+    *pargv = argv + arg_start;
+    if (tool)
+        return tool;
+    if (optind != noaction)
+        return 0;
+    if (s-&gt;verbose == 2)
+        return OPT_PRINT_DIRS;
+    if (s-&gt;verbose)
+        return OPT_V;
+    return OPT_HELP;
+}
+</code></pre>
+<h2 id="pub_func-宏"><a class="header" href="#pub_func-宏">PUB_FUNC 宏</a></h2>
+<pre><code class="language-c"># ifdef LIBTCC_AS_DLL
+#  define LIBTCCAPI __declspec(dllexport)
+#  define PUB_FUNC LIBTCCAPI
+# endif
+
+
+
+#ifndef PUB_FUNC /* functions used by tcc.c but not in libtcc.h */
+# define PUB_FUNC
+#endif
+</code></pre>
+<p>在 TinyCC（TCC）的代码中，<code>PUB_FUNC</code> 宏用于控制函数的导出方式，尤其是在构建<strong>动态链接库</strong>（DLL）时的导出策略。让我们逐步分析这段代码，解释 <code>PUB_FUNC</code> 宏以及它的作用。</p>
+<h3 id="1-libtcc_as_dll-的作用"><a class="header" href="#1-libtcc_as_dll-的作用">1. <code>LIBTCC_AS_DLL</code> 的作用</a></h3>
+<pre><code class="language-c"># ifdef LIBTCC_AS_DLL
+</code></pre>
+<p>这段代码首先检查是否定义了 <code>LIBTCC_AS_DLL</code>。这个宏通常在构建 TinyCC 作为<strong>动态链接库</strong>（DLL）时定义。如果 <code>LIBTCC_AS_DLL</code> 被定义，意味着当前正在构建 TinyCC 的动态库版本，此时某些函数和符号需要显式导出，以供外部程序或库使用。</p>
+<h3 id="2-libtccapi-和-pub_func-宏"><a class="header" href="#2-libtccapi-和-pub_func-宏">2. <code>LIBTCCAPI</code> 和 <code>PUB_FUNC</code> 宏</a></h3>
+<pre><code class="language-c">#  define LIBTCCAPI __declspec(dllexport)
+#  define PUB_FUNC LIBTCCAPI
+# endif
+</code></pre>
+<ul>
+<li>
+<p><strong><code>__declspec(dllexport)</code></strong>：这是一个用于 Windows 平台的特定声明，表示将某个符号（通常是函数或变量）导出，以便其他模块（比如其他 EXE 或 DLL 文件）可以使用它。</p>
+<ul>
+<li>当编译一个 DLL 文件时，只有使用了 <code>__declspec(dllexport)</code> 声明的符号会被导出供外部使用。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>LIBTCCAPI</code></strong>：<code>LIBTCCAPI</code> 被定义为 <code>__declspec(dllexport)</code>，意味着任何使用 <code>LIBTCCAPI</code> 的函数声明将被导出到 DLL 中。</p>
+</li>
+<li>
+<p><strong><code>PUB_FUNC</code></strong>：接着，<code>PUB_FUNC</code> 被定义为 <code>LIBTCCAPI</code>，也就是 <code>__declspec(dllexport)</code>。所以，在 <code>LIBTCC_AS_DLL</code> 被定义时，<code>PUB_FUNC</code> 实际上是一个符号导出声明，它将指定的函数导出到 DLL。</p>
+</li>
+</ul>
+<h3 id="3-ifndef-pub_func-宏块"><a class="header" href="#3-ifndef-pub_func-宏块">3. <code>#ifndef PUB_FUNC</code> 宏块</a></h3>
+<pre><code class="language-c">#ifndef PUB_FUNC /* functions used by tcc.c but not in libtcc.h */
+# define PUB_FUNC
+#endif
+</code></pre>
+<p>这部分代码用于处理一种情况：如果 <code>LIBTCC_AS_DLL</code> 没有被定义，那么 <code>PUB_FUNC</code> 之前并没有被定义为 <code>LIBTCCAPI</code>。因此，它会为 <code>PUB_FUNC</code> 提供一个默认定义，使其为空。</p>
+<p>换句话说：</p>
+<ul>
+<li><strong>如果没有定义 <code>LIBTCC_AS_DLL</code></strong>，<code>PUB_FUNC</code> 将被定义为空（即它不做任何事情）。</li>
+<li><strong>如果定义了 <code>LIBTCC_AS_DLL</code></strong>，<code>PUB_FUNC</code> 将被定义为 <code>__declspec(dllexport)</code>，用于导出函数。</li>
+</ul>
+<h3 id="总结"><a class="header" href="#总结">总结</a></h3>
+<ul>
+<li>
+<p><strong><code>PUB_FUNC</code> 宏的作用</strong>：<code>PUB_FUNC</code> 控制函数的导出。在构建动态库时，它确保指定的函数可以被导出并供外部使用。在构建静态库或普通可执行文件时，<code>PUB_FUNC</code> 为空，起不到任何作用。</p>
+</li>
+<li>
+<p><strong>使用场景</strong>：</p>
+<ul>
+<li>当 TCC 被编译成 DLL 时，<code>PUB_FUNC</code> 宏会被展开为 <code>__declspec(dllexport)</code>，使得标记为 <code>PUB_FUNC</code> 的函数能够导出。</li>
+<li>当 TCC 被编译为静态库或普通可执行文件时，<code>PUB_FUNC</code> 不会导出任何函数，只是一个空的占位符。</li>
+</ul>
+</li>
+</ul>
+<h3 id="示例"><a class="header" href="#示例">示例</a></h3>
+<p>假设我们有一个函数：</p>
+<pre><code class="language-c">PUB_FUNC void my_function() {
+    // 函数实现
+}
+</code></pre>
+<ul>
+<li>
+<p>如果在构建 TCC 时定义了 <code>LIBTCC_AS_DLL</code>，这段代码会被展开为：</p>
+<pre><code class="language-c">__declspec(dllexport) void my_function() {
+    // 函数实现
+}
+</code></pre>
+<p>这样，<code>my_function</code> 函数就会被导出到 DLL 中，外部程序可以调用它。</p>
+</li>
+<li>
+<p>如果没有定义 <code>LIBTCC_AS_DLL</code>，则 <code>PUB_FUNC</code> 会被定义为空，最终代码变为：</p>
+<pre><code class="language-c">void my_function() {
+    // 函数实现
+}
+</code></pre>
+<p>在这种情况下，<code>my_function</code> 只是一个普通的函数，不会被导出到 DLL 中。</p>
+</li>
+</ul>
+<h3 id="好处和使用场景"><a class="header" href="#好处和使用场景">好处和使用场景</a></h3>
+<ul>
+<li>
+<p><strong>跨平台支持</strong>：通过使用宏（如 <code>LIBTCCAPI</code> 和 <code>PUB_FUNC</code>），可以在构建动态库时控制符号导出，同时也可以支持跨平台（虽然 <code>__declspec(dllexport)</code> 是 Windows 特定的，但类似机制在其他平台上也有，比如 <code>__attribute__((visibility("default")))</code> 在 Linux 中）。</p>
+</li>
+<li>
+<p><strong>灵活性</strong>：通过这种宏定义，你可以在同一套代码中灵活地控制符号导出，适应不同的编译配置，而无需在代码中进行繁杂的修改。</p>
+</li>
+</ul>
+<p>总结来说，<code>PUB_FUNC</code> 是一种预处理宏，用来灵活控制在不同编译环境（DLL 或非 DLL）中函数是否需要导出给外部使用。</p>
+<h2 id="libtccapi"><a class="header" href="#libtccapi">LIBTCCAPI</a></h2>
+<pre><code>#ifndef LIBTCCAPI
+# define LIBTCCAPI
+#endif
+
+
+# ifdef LIBTCC_AS_DLL
+#  define LIBTCCAPI __declspec(dllexport)
+#  define PUB_FUNC LIBTCCAPI
+# endif
+</code></pre>
+<p>在 C 语言中，使用 <code>#ifndef</code>（如果没有定义）和 <code>#define</code> 的模式是一种非常常见的防御性编程方法，用来确保宏或标识符有一个默认定义。这种模式主要是为了避免编译器报错并保证代码在各种环境下的兼容性和健壮性。</p>
+<p>对于你提到的代码：</p>
+<pre><code class="language-c">#ifndef LIBTCCAPI
+# define LIBTCCAPI
+#endif
+</code></pre>
+<p>这个做法背后的原因可以归结为以下几点：</p>
+<h3 id="1-确保宏总有一个定义"><a class="header" href="#1-确保宏总有一个定义">1. <strong>确保宏总有一个定义</strong></a></h3>
+<p><code>#ifndef</code> 的意思是“如果没有定义 <code>LIBTCCAPI</code>”，则定义它为默认值。在这种情况下，<code>LIBTCCAPI</code> 被定义为空（<code>#define LIBTCCAPI</code>）。这样做的目的是确保代码在某些编译环境下，即使没有明确定义 <code>LIBTCCAPI</code>，也能正常编译。</p>
+<p>例如，<code>LIBTCCAPI</code> 可能用于在不同的编译配置中标识函数的导出或可见性，但在某些情况下（例如静态编译或不需要导出的环境中），可能没有设置这个宏。这时，如果没有给它一个默认值（空值），编译器可能会报错，因为没有定义的宏会导致未预期的行为。</p>
+<h3 id="2-增强代码的可移植性"><a class="header" href="#2-增强代码的可移植性">2. <strong>增强代码的可移植性</strong></a></h3>
+<p>通过这种防御性编程模式，开发者可以确保代码能够在<strong>不同的编译器</strong>和<strong>不同的编译选项</strong>下正常工作。举个例子：</p>
+<ul>
+<li>在<strong>Windows 动态链接库</strong>（DLL）编译时，<code>LIBTCCAPI</code> 可能需要定义为 <code>__declspec(dllexport)</code> 来导出函数。</li>
+<li>在<strong>静态链接</strong>或<strong>普通编译</strong>时，<code>LIBTCCAPI</code> 不需要定义任何东西，因为没有函数需要导出。在这种情况下，<code>#define LIBTCCAPI</code>（即定义为空）就确保了代码的兼容性。</li>
+</ul>
+<p>这样，代码就可以在动态链接、静态链接、不同平台之间保持兼容。</p>
+<h3 id="3-避免重复定义或冲突"><a class="header" href="#3-避免重复定义或冲突">3. <strong>避免重复定义或冲突</strong></a></h3>
+<p>通过这种模式，开发者可以确保在代码的其他地方（或者通过编译器命令行参数）已经定义了 <code>LIBTCCAPI</code> 的情况下，不会重新定义它，避免重复定义的错误。</p>
+<p>例如，可能在编译时已经通过编译器选项或在其他头文件中定义了 <code>LIBTCCAPI</code>，如果再重新定义会导致冲突。<code>#ifndef LIBTCCAPI</code> 确保只有在 <code>LIBTCCAPI</code> 未定义时才会给它一个默认定义，防止重复定义和冲突。</p>
+<h3 id="4-代码的灵活性和可维护性"><a class="header" href="#4-代码的灵活性和可维护性">4. <strong>代码的灵活性和可维护性</strong></a></h3>
+<p>使用这种结构可以使代码更易于维护。你可以在不同的编译环境下自定义 <code>LIBTCCAPI</code>，而无需修改源代码的每一个地方。例如，如果你要在某个编译环境中导出函数，你只需要在编译器或项目的配置中定义 <code>LIBTCCAPI</code>，而不需要修改头文件：</p>
+<pre><code class="language-c">// Windows DLL 编译时，可能通过编译器参数定义 LIBTCCAPI 为 __declspec(dllexport)
+gcc -DLIBTCCAPI=__declspec(dllexport)
+</code></pre>
+<p>在这种情况下，<code>LIBTCCAPI</code> 就不会被 <code>#define LIBTCCAPI</code> 空替代，因为它已经在编译时被定义了。</p>
+<h3 id="例子"><a class="header" href="#例子">例子</a></h3>
+<p>考虑以下代码片段：</p>
+<pre><code class="language-c">#ifndef LIBTCCAPI
+# define LIBTCCAPI
+#endif
+
+LIBTCCAPI void my_function();
+</code></pre>
+<p>在不同的编译配置下：</p>
+<ul>
+<li><strong>Windows 动态链接库</strong>（DLL）编译时，<code>LIBTCCAPI</code> 可能被定义为 <code>__declspec(dllexport)</code>，从而导出 <code>my_function</code>。</li>
+<li><strong>静态库编译</strong>或<strong>普通可执行文件</strong>时，<code>LIBTCCAPI</code> 不需要任何定义。在这种情况下，<code>#define LIBTCCAPI</code> 将会使它为空，这样代码仍然能正常工作。</li>
+</ul>
+<h3 id="5-总结"><a class="header" href="#5-总结">5. <strong>总结</strong></a></h3>
+<ul>
+<li><strong>目的</strong>：<code>#ifndef LIBTCCAPI #define LIBTCCAPI</code> 是为了防止 <code>LIBTCCAPI</code> 未定义导致的编译错误，并确保代码在不同平台和编译环境下的兼容性和可移植性。</li>
+<li><strong>灵活性</strong>：它允许 <code>LIBTCCAPI</code> 在特定环境中（例如 DLL 编译时）被自定义，而在其他环境中提供一个默认的空定义，确保代码不会因为未定义的宏而出错。</li>
+<li><strong>可移植性和健壮性</strong>：这种防御性编程使得代码能够在不同的编译器和平台下更稳健地运行。</li>
+</ul>
+<p>通过这种方式，开发者可以写出更通用、更健壮的代码，在不同的编译环境中都能正常工作。</p>
+<h2 id="cstr_reset"><a class="header" href="#cstr_reset">cstr_reset</a></h2>
+<pre><code class="language-c">/* reset string to empty */
+ST_FUNC void cstr_reset(CString *cstr)
+{
+    cstr-&gt;size = 0;
+}
+</code></pre>
+<h2 id="tcc_parse_args-的返回码"><a class="header" href="#tcc_parse_args-的返回码">tcc_parse_args 的返回码</a></h2>
+<pre><code class="language-c">/* tcc_parse_args return codes: */
+#define OPT_HELP 1
+#define OPT_HELP2 2
+#define OPT_V 3
+#define OPT_PRINT_DIRS 4
+#define OPT_AR 5
+#define OPT_IMPDEF 6
+#define OPT_M32 32
+#define OPT_M64 64
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter_2/undefgnu_ext是什么意思.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter_2/set_environment.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter_2/undefgnu_ext是什么意思.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter_2/set_environment.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

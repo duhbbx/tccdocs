@@ -10,3 +10,7 @@ title = "TinyCC源码分析"
 
 [output.html]
 no-section-label = true             # 是否显示章节编号（默认显示编号）
+
+[build]
+build-dir="docs"
+

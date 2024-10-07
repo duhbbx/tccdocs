@@ -1,0 +1,333 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>2.6 什么是目标文件 - TinyCC源码分析</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/main函数的argc和argv.html">2.1 main 函数的 argc 和 argv</a></li><li class="chapter-item expanded "><a href="../chapter_2/static的用法.html">2.2 static的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/ppfp变量的作用.html">2.3 ppfp 变量的作用</a></li><li class="chapter-item expanded "><a href="../chapter_2/C语言中的枚举的用法.html">2.4 C 语言中的枚举的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/输出文件的类型定义.html">2.5 输出文件的类型定义</a></li><li class="chapter-item expanded "><a href="../chapter_2/什么是目标文件.html" class="active">2.6 什么是目标文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/exe和dll文件的区别.html">2.7 exe和 dll 文件的区别</a></li><li class="chapter-item expanded "><a href="../chapter_2/c语言中预处理文件.html">2.8 c语言中预处理文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/类型的前置声明.html">2.9 类型的前置声明</a></li><li class="chapter-item expanded "><a href="../chapter_2/TCCState.html">2.10 TCCState</a></li><li class="chapter-item expanded "><a href="../chapter_2/undefgnu_ext是什么意思.html">2.11 #undef gnu_ext 是什么意思</a></li><li class="chapter-item expanded "><a href="../chapter_2/tcc_parse_args命令行参数的解析.html">2.12 tcc_parse_args: 命令行参数的解析</a></li><li class="chapter-item expanded "><a href="../chapter_2/set_environment.html">2.13 set_environment</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_3/编译的整体流程.html">编译的整体流程</a></li><li class="chapter-item expanded "><a href="../chapter_3/ST_FUNC的用法.html">ST_FUNC的用法</a></li><li class="chapter-item expanded "><a href="../chapter_3/CString.html">CString</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_compile.html">tcc_compile</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_enter_state.html">tcc_enter_state</a></li><li class="chapter-item expanded "><a href="../chapter_3/preprocess_start.html">preprocess_start</a></li><li class="chapter-item expanded "><a href="../chapter_3/file.html">file</a></li><li class="chapter-item expanded "><a href="../chapter_3/tccgen_init.html">tccgen_init</a></li><li class="chapter-item expanded "><a href="../chapter_3/next.html">next</a></li><li class="chapter-item expanded "><a href="../chapter_3/decl.html">decl</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="../chapter_4/token-values.html">token values</a></li><li class="chapter-item expanded "><a href="../chapter_4/next_nomacro.html">next_nomacro</a></li><li class="chapter-item expanded "><a href="../chapter_4/define_find.html">define_find</a></li><li class="chapter-item expanded "><a href="../chapter_4/table_ident.html">table_ident</a></li><li class="chapter-item expanded "><a href="../chapter_4/current_value_type.html">current_value_type</a></li><li class="chapter-item expanded "><a href="../chapter_4/scope.html">scope</a></li><li class="chapter-item expanded "><a href="../chapter_4/filespec.html">filespec</a></li><li class="chapter-item expanded "><a href="../chapter_4/include_ifdef_stack.html">include_ifdef_stack</a></li><li class="chapter-item expanded "><a href="../chapter_4/pack_stack_ptr.html">pack_stack_ptr</a></li><li class="chapter-item expanded "><a href="../chapter_4/macro_ptr.html">macro_ptr</a></li><li class="chapter-item expanded "><a href="../chapter_4/TOK_LINEFEED_TOK_EOF.html">TOK_LINEFEED_TOK_EOF</a></li><li class="chapter-item expanded "><a href="../chapter_4/string_slice.html">string_slice</a></li><li class="chapter-item expanded "><a href="../chapter_4/lldb如何指定源码中的函数？.html">lldb如何指定源码中的函数</a></li><li class="chapter-item expanded affix "><li class="part-title">第五章</li><li class="chapter-item expanded "><a href="../chapter_5/语法分析.html">第五章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第六章</li><li class="chapter-item expanded "><a href="../chapter_6/语义分析.html">第六章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第七章</li><li class="chapter-item expanded "><a href="../chapter_7/gen_function.html">gen_function</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">TinyCC源码分析</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="什么是目标文件"><a class="header" href="#什么是目标文件">什么是目标文件</a></h1>
+<h2 id="什么是目标文件-1"><a class="header" href="#什么是目标文件-1">什么是目标文件？</a></h2>
+<p><strong>目标文件</strong>（Object File）是由编译器将源代码（如 C、C++ 等语言）编译后生成的中间文件，通常是二进制格式。目标文件是构建可执行程序或库的一个中间步骤。它包含了机器指令、数据和必要的元数据，供链接器（Linker）使用，将多个目标文件链接成最终的可执行文件或库。</p>
+<p>目标文件一般以 <code>.o</code>、<code>.obj</code> 或者 <code>.out</code> 为扩展名，具体取决于使用的编译器和操作系统。例如，在 Linux 系统中常用 <code>.o</code>，而在 Windows 系统中，目标文件通常使用 <code>.obj</code>。</p>
+<h2 id="目标文件的生成过程"><a class="header" href="#目标文件的生成过程">目标文件的生成过程</a></h2>
+<p>编译器将源代码翻译成汇编语言或机器语言指令时，会生成目标文件。这个过程称为<strong>编译</strong>（Compile），它是以下过程中的一部分：</p>
+<ol>
+<li><strong>预处理</strong>：预处理器处理头文件的包含、宏定义和条件编译等操作，生成纯粹的 C/C++ 源代码文件。</li>
+<li><strong>编译</strong>：编译器将源代码翻译成汇编语言。</li>
+<li><strong>汇编</strong>：汇编器将汇编语言翻译成机器语言，生成目标文件。</li>
+<li><strong>链接</strong>：链接器将多个目标文件和库文件链接在一起，生成最终的可执行文件。</li>
+</ol>
+<p>例如，编译一个 C 文件 <code>main.c</code> 生成目标文件的命令是：</p>
+<pre><code class="language-bash">gcc -c main.c -o main.o
+</code></pre>
+<ul>
+<li><code>-c</code> 表示只进行编译和汇编，不进行链接。</li>
+<li><code>main.o</code> 是生成的目标文件。</li>
+</ul>
+<h2 id="目标文件的结构"><a class="header" href="#目标文件的结构">目标文件的结构</a></h2>
+<p>目标文件通常由以下几部分组成：</p>
+<ol>
+<li><strong>代码段（Text Segment）</strong>：存储编译生成的机器指令，即程序的执行代码。</li>
+<li><strong>数据段（Data Segment）</strong>：
+<ul>
+<li><strong>初始化数据段</strong>：包含已初始化的全局变量和静态变量。</li>
+<li><strong>未初始化数据段（BSS 段）</strong>：包含未初始化的全局变量和静态变量。编译器通常将这些变量标记为占用空间，但没有赋值。</li>
+</ul>
+</li>
+<li><strong>符号表（Symbol Table）</strong>：记录程序中的函数和变量符号信息，用于链接过程中的符号解析。</li>
+<li><strong>重定位信息（Relocation Information）</strong>：记录目标文件中的一些位置（如函数调用、全局变量）需要在链接时修正的地方，帮助链接器将不同目标文件中的符号正确地结合起来。</li>
+<li><strong>调试信息（Debug Information）</strong>：如果编译时启用了调试选项（如 <code>-g</code>），目标文件还会包含调试信息，以便调试器追踪程序运行状态。</li>
+</ol>
+<h2 id="目标文件的类型"><a class="header" href="#目标文件的类型">目标文件的类型</a></h2>
+<p>根据目标文件的用途和生成方式，它可以分为以下几种类型：</p>
+<ol>
+<li>
+<p><strong>可重定位目标文件</strong>（Relocatable Object File）：</p>
+<ul>
+<li>通常由编译器生成，可以链接成最终的可执行文件。</li>
+<li>包含了所有的代码和数据，但没有绑定到特定的内存地址，链接器负责将其与其他目标文件和库结合，并重定位其中的符号。</li>
+</ul>
+</li>
+<li>
+<p><strong>可执行文件</strong>（Executable Object File）：</p>
+<ul>
+<li>链接后的最终产物，可以直接执行。</li>
+<li>所有的地址和符号已经在链接过程中确定下来，程序可以加载到内存并运行。</li>
+</ul>
+</li>
+<li>
+<p><strong>动态链接库文件</strong>（Shared Object File 或 Dynamic Library）：</p>
+<ul>
+<li>动态库是一种目标文件，它可以在运行时与可执行程序动态链接，节省内存和存储空间。</li>
+<li>例如，在 Linux 系统中，动态链接库文件的扩展名通常是 <code>.so</code>，而在 Windows 中则是 <code>.dll</code>。</li>
+</ul>
+</li>
+</ol>
+<h2 id="目标文件的作用"><a class="header" href="#目标文件的作用">目标文件的作用</a></h2>
+<p>目标文件在软件开发过程中扮演了重要的角色：</p>
+<ol>
+<li><strong>模块化编程</strong>：通过将每个源文件编译为单独的目标文件，开发者可以分阶段编译和调试程序，方便代码的维护和管理。</li>
+<li><strong>增量编译</strong>：当程序中的某些源文件被修改时，只需重新编译受影响的文件，而无需重新编译整个项目。这极大提高了编译效率。</li>
+<li><strong>链接库和程序</strong>：目标文件是构建静态库和动态库的基础，它们可以和其他目标文件链接，生成可执行文件或动态库。</li>
+</ol>
+<h2 id="目标文件和可执行文件的区别"><a class="header" href="#目标文件和可执行文件的区别">目标文件和可执行文件的区别</a></h2>
+<ul>
+<li><strong>目标文件</strong>是编译过程的中间产物，它包含了程序的机器代码和元数据，但通常还不能直接执行。</li>
+<li><strong>可执行文件</strong>是链接器将多个目标文件、库文件合并，并将所有符号绑定到具体的内存地址后生成的文件，它是可以直接在操作系统上运行的程序。</li>
+</ul>
+<h3 id="示例"><a class="header" href="#示例">示例</a></h3>
+<pre><code class="language-bash"># 编译 source1.c 和 source2.c 生成目标文件
+gcc -c source1.c -o source1.o
+gcc -c source2.c -o source2.o
+
+# 链接生成可执行文件
+gcc source1.o source2.o -o my_program
+</code></pre>
+<p>在这个例子中，<code>source1.o</code> 和 <code>source2.o</code> 是目标文件，<code>my_program</code> 是最终生成的可执行文件。</p>
+<h2 id="使用工具查看目标文件"><a class="header" href="#使用工具查看目标文件">使用工具查看目标文件</a></h2>
+<p>可以使用一些工具来查看目标文件的内部结构和信息：</p>
+<ol>
+<li>
+<p><strong><code>nm</code></strong>：用于查看目标文件中的符号表，显示函数和变量的符号名及其类型。</p>
+<pre><code class="language-bash">nm main.o
+</code></pre>
+</li>
+<li>
+<p><strong><code>objdump</code></strong>：可以查看目标文件的详细内容，包括汇编代码、符号表、重定位信息等。</p>
+<pre><code class="language-bash">objdump -d main.o  # 反汇编目标文件
+</code></pre>
+</li>
+<li>
+<p><strong><code>readelf</code></strong>：可以查看目标文件的 ELF 格式的详细信息（ELF 是一种常见的目标文件格式）。</p>
+<pre><code class="language-bash">readelf -h main.o  # 查看 ELF 文件头
+</code></pre>
+</li>
+</ol>
+<h2 id="总结"><a class="header" href="#总结">总结</a></h2>
+<ul>
+<li><strong>目标文件</strong>是源代码编译后的二进制文件，它包含了机器指令、数据和符号信息，是生成可执行文件或库的中间步骤。</li>
+<li><strong>类型</strong>：目标文件可以是可重定位目标文件、可执行文件或者动态库文件。</li>
+<li><strong>结构</strong>：目标文件由代码段、数据段、符号表和重定位信息组成。</li>
+<li><strong>作用</strong>：目标文件支持模块化编程和增量编译，并在最终链接时用于生成可执行文件。</li>
+</ul>
+<p>目标文件是程序从源代码到最终可执行文件或库的必经步骤，通过了解它的结构和作用，可以更好地理解编译、链接以及程序执行的整个过程。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter_2/输出文件的类型定义.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter_2/exe和dll文件的区别.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter_2/输出文件的类型定义.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter_2/exe和dll文件的区别.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>current_value_type - TinyCC源码分析</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/main函数的argc和argv.html">2.1 main 函数的 argc 和 argv</a></li><li class="chapter-item expanded "><a href="../chapter_2/static的用法.html">2.2 static的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/ppfp变量的作用.html">2.3 ppfp 变量的作用</a></li><li class="chapter-item expanded "><a href="../chapter_2/C语言中的枚举的用法.html">2.4 C 语言中的枚举的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/输出文件的类型定义.html">2.5 输出文件的类型定义</a></li><li class="chapter-item expanded "><a href="../chapter_2/什么是目标文件.html">2.6 什么是目标文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/exe和dll文件的区别.html">2.7 exe和 dll 文件的区别</a></li><li class="chapter-item expanded "><a href="../chapter_2/c语言中预处理文件.html">2.8 c语言中预处理文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/类型的前置声明.html">2.9 类型的前置声明</a></li><li class="chapter-item expanded "><a href="../chapter_2/TCCState.html">2.10 TCCState</a></li><li class="chapter-item expanded "><a href="../chapter_2/undefgnu_ext是什么意思.html">2.11 #undef gnu_ext 是什么意思</a></li><li class="chapter-item expanded "><a href="../chapter_2/tcc_parse_args命令行参数的解析.html">2.12 tcc_parse_args: 命令行参数的解析</a></li><li class="chapter-item expanded "><a href="../chapter_2/set_environment.html">2.13 set_environment</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_3/编译的整体流程.html">编译的整体流程</a></li><li class="chapter-item expanded "><a href="../chapter_3/ST_FUNC的用法.html">ST_FUNC的用法</a></li><li class="chapter-item expanded "><a href="../chapter_3/CString.html">CString</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_compile.html">tcc_compile</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_enter_state.html">tcc_enter_state</a></li><li class="chapter-item expanded "><a href="../chapter_3/preprocess_start.html">preprocess_start</a></li><li class="chapter-item expanded "><a href="../chapter_3/file.html">file</a></li><li class="chapter-item expanded "><a href="../chapter_3/tccgen_init.html">tccgen_init</a></li><li class="chapter-item expanded "><a href="../chapter_3/next.html">next</a></li><li class="chapter-item expanded "><a href="../chapter_3/decl.html">decl</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="../chapter_4/token-values.html">token values</a></li><li class="chapter-item expanded "><a href="../chapter_4/next_nomacro.html">next_nomacro</a></li><li class="chapter-item expanded "><a href="../chapter_4/define_find.html">define_find</a></li><li class="chapter-item expanded "><a href="../chapter_4/table_ident.html">table_ident</a></li><li class="chapter-item expanded "><a href="../chapter_4/current_value_type.html" class="active">current_value_type</a></li><li class="chapter-item expanded "><a href="../chapter_4/scope.html">scope</a></li><li class="chapter-item expanded "><a href="../chapter_4/filespec.html">filespec</a></li><li class="chapter-item expanded "><a href="../chapter_4/include_ifdef_stack.html">include_ifdef_stack</a></li><li class="chapter-item expanded "><a href="../chapter_4/pack_stack_ptr.html">pack_stack_ptr</a></li><li class="chapter-item expanded "><a href="../chapter_4/macro_ptr.html">macro_ptr</a></li><li class="chapter-item expanded "><a href="../chapter_4/TOK_LINEFEED_TOK_EOF.html">TOK_LINEFEED_TOK_EOF</a></li><li class="chapter-item expanded "><a href="../chapter_4/string_slice.html">string_slice</a></li><li class="chapter-item expanded "><a href="../chapter_4/lldb如何指定源码中的函数？.html">lldb如何指定源码中的函数</a></li><li class="chapter-item expanded affix "><li class="part-title">第五章</li><li class="chapter-item expanded "><a href="../chapter_5/语法分析.html">第五章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第六章</li><li class="chapter-item expanded "><a href="../chapter_6/语义分析.html">第六章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第七章</li><li class="chapter-item expanded "><a href="../chapter_7/gen_function.html">gen_function</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">TinyCC源码分析</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="没看懂-tinycc-中的--current-value-是什么意思"><a class="header" href="#没看懂-tinycc-中的--current-value-是什么意思">没看懂 tinycc 中的  current value 是什么意思？</a></h1>
+<pre><code class="language-c">/* The current value can be: */
+#define VT_VALMASK   0x003f  /* mask for value location, register or: */
+#define VT_CONST     0x0030  /* constant in vc (must be first non register value) */
+#define VT_LLOCAL    0x0031  /* lvalue, offset on stack */
+#define VT_LOCAL     0x0032  /* offset on stack */
+#define VT_CMP       0x0033  /* the value is stored in processor flags (in vc) */
+#define VT_JMP       0x0034  /* value is the consequence of jmp true (even) */
+#define VT_JMPI      0x0035  /* value is the consequence of jmp false (odd) */
+#define VT_LVAL      0x0100  /* var is an lvalue */
+#define VT_SYM       0x0200  /* a symbol value is added */
+#define VT_MUSTCAST  0x0C00  /* value must be casted to be correct (used for
+                                char/short stored in integer registers) */
+#define VT_NONCONST  0x1000  /* VT_CONST, but not an (C standard) integer
+                                constant expression */
+#define VT_MUSTBOUND 0x4000  /* bound checking must be done before
+                                dereferencing value */
+#define VT_BOUNDED   0x8000  /* value is bounded. The address of the
+                                bounding function call point is in vc */
+/* types */
+#define VT_BTYPE       0x000f  /* mask for basic type */
+#define VT_VOID             0  /* void type */
+#define VT_BYTE             1  /* signed byte type */
+#define VT_SHORT            2  /* short type */
+#define VT_INT              3  /* integer type */
+#define VT_LLONG            4  /* 64 bit integer */
+#define VT_PTR              5  /* pointer */
+#define VT_FUNC             6  /* function type */
+#define VT_STRUCT           7  /* struct/union definition */
+#define VT_FLOAT            8  /* IEEE float */
+#define VT_DOUBLE           9  /* IEEE double */
+#define VT_LDOUBLE         10  /* IEEE long double */
+#define VT_BOOL            11  /* ISOC99 boolean type */
+#define VT_QLONG           13  /* 128-bit integer. Only used for x86-64 ABI */
+#define VT_QFLOAT          14  /* 128-bit float. Only used for x86-64 ABI */
+
+#define VT_UNSIGNED    0x0010  /* unsigned type */
+#define VT_DEFSIGN     0x0020  /* explicitly signed or unsigned */
+#define VT_ARRAY       0x0040  /* array type (also has VT_PTR) */
+#define VT_BITFIELD    0x0080  /* bitfield modifier */
+#define VT_CONSTANT    0x0100  /* const modifier */
+#define VT_VOLATILE    0x0200  /* volatile modifier */
+#define VT_VLA         0x0400  /* VLA type (also has VT_PTR and VT_ARRAY) */
+#define VT_LONG        0x0800  /* long type (also has VT_INT rsp. VT_LLONG) */
+
+/* storage */
+#define VT_EXTERN  0x00001000  /* extern definition */
+#define VT_STATIC  0x00002000  /* static variable */
+#define VT_TYPEDEF 0x00004000  /* typedef definition */
+#define VT_INLINE  0x00008000  /* inline definition */
+/* currently unused: 0x000[1248]0000  */
+
+#define VT_STRUCT_SHIFT 20     /* shift for bitfield shift values (32 - 2*6) */
+#define VT_STRUCT_MASK (((1U &lt;&lt; (6+6)) - 1) &lt;&lt; VT_STRUCT_SHIFT | VT_BITFIELD)
+#define BIT_POS(t) (((t) &gt;&gt; VT_STRUCT_SHIFT) &amp; 0x3f)
+#define BIT_SIZE(t) (((t) &gt;&gt; (VT_STRUCT_SHIFT + 6)) &amp; 0x3f)
+
+#define VT_UNION    (1 &lt;&lt; VT_STRUCT_SHIFT | VT_STRUCT)
+#define VT_ENUM     (2 &lt;&lt; VT_STRUCT_SHIFT) /* integral type is an enum really */
+#define VT_ENUM_VAL (3 &lt;&lt; VT_STRUCT_SHIFT) /* integral type is an enum constant really */
+
+#define IS_ENUM(t) ((t &amp; VT_STRUCT_MASK) == VT_ENUM)
+#define IS_ENUM_VAL(t) ((t &amp; VT_STRUCT_MASK) == VT_ENUM_VAL)
+#define IS_UNION(t) ((t &amp; (VT_STRUCT_MASK|VT_BTYPE)) == VT_UNION)
+
+#define VT_ATOMIC   VT_VOLATILE
+
+/* type mask (except storage) */
+#define VT_STORAGE (VT_EXTERN | VT_STATIC | VT_TYPEDEF | VT_INLINE)
+#define VT_TYPE (~(VT_STORAGE|VT_STRUCT_MASK))
+
+/* symbol was created by tccasm.c first */
+#define VT_ASM (VT_VOID | 1 &lt;&lt; VT_STRUCT_SHIFT)
+#define VT_ASM_FUNC (VT_ASM | 2 &lt;&lt; VT_STRUCT_SHIFT)
+#define IS_ASM_SYM(sym) (((sym)-&gt;type.t &amp; (VT_BTYPE | VT_ASM)) == VT_ASM)
+
+/* general: set/get the pseudo-bitfield value for bit-mask M */
+#define BFVAL(M,N) ((unsigned)((M) &amp; ~((M) &lt;&lt; 1)) * (N))
+#define BFGET(X,M) (((X) &amp; (M)) / BFVAL(M,1))
+#define BFSET(X,M,N) ((X) = ((X) &amp; ~(M)) | BFVAL(M,N))
+</code></pre>
+<p>在 <code>TinyCC</code> 中，<code>current value</code> 是用于表示编译过程中一个表达式或变量的<strong>存储位置</strong>或者<strong>计算结果</strong>的具体状态。在表达式计算和代码生成过程中，编译器需要跟踪每个值的当前状态，以便知道它是保存在寄存器、栈、常量池，还是需要进行某种处理，比如跳转（<code>jmp</code>）或者符号引用（<code>symbol reference</code>）等。这个机制通过一系列的宏定义和位标志来实现，这些宏定义了值在编译器内部的各种状态。</p>
+<p><code>current value</code> 的概念可以理解为在编译过程中一个值的<strong>具体位置或类型</strong>，编译器会根据这个信息来生成合适的代码。</p>
+<h3 id="宏的解释"><a class="header" href="#宏的解释">宏的解释</a></h3>
+<p>这些宏定义用于标记 <code>TinyCC</code> 编译器中的值类型和状态。它们被组合使用，编码了当前值在不同阶段的状态和位置。让我们逐一解释这些标志。</p>
+<h4 id="1-vt_valmask"><a class="header" href="#1-vt_valmask">1. <code>VT_VALMASK</code></a></h4>
+<pre><code class="language-c">#define VT_VALMASK  0x003f
+</code></pre>
+<ul>
+<li>这是一个掩码，用于提取值的位置或类型信息。通过 <code>VT_VALMASK</code>，可以获得值在处理器中的具体位置或类型，比如是否是常量、局部变量等。</li>
+</ul>
+<h4 id="2-vt_const"><a class="header" href="#2-vt_const">2. <code>VT_CONST</code></a></h4>
+<pre><code class="language-c">#define VT_CONST  0x0030
+</code></pre>
+<ul>
+<li>表示一个<strong>常量</strong>值。常量存储在变量 <code>vc</code> 中，表示不需要从内存或寄存器读取的值，直接使用它的常量即可。</li>
+</ul>
+<h4 id="3-vt_llocal"><a class="header" href="#3-vt_llocal">3. <code>VT_LLOCAL</code></a></h4>
+<pre><code class="language-c">#define VT_LLOCAL  0x0031
+</code></pre>
+<ul>
+<li>表示一个<strong>左值</strong>（<code>lvalue</code>），并且它的值是位于栈上的<strong>局部变量</strong>。左值意味着可以对这个值进行赋值操作。</li>
+</ul>
+<h4 id="4-vt_local"><a class="header" href="#4-vt_local">4. <code>VT_LOCAL</code></a></h4>
+<pre><code class="language-c">#define VT_LOCAL  0x0032
+</code></pre>
+<ul>
+<li>表示一个局部变量的<strong>偏移量</strong>，它位于栈上。这个宏和 <code>VT_LLOCAL</code> 相似，但表示的是一个<strong>右值</strong>（<code>rvalue</code>），即一个可以被读取但不能直接赋值的值。</li>
+</ul>
+<h4 id="5-vt_cmp"><a class="header" href="#5-vt_cmp">5. <code>VT_CMP</code></a></h4>
+<pre><code class="language-c">#define VT_CMP  0x0033
+</code></pre>
+<ul>
+<li>表示比较操作的结果存储在<strong>处理器的标志位</strong>（flags）中。例如，在 x86 架构上，比较操作的结果会被存储在 <code>EFLAGS</code> 寄存器中，这个标志告诉后续代码生成如何利用这些标志位执行条件跳转。</li>
+</ul>
+<h4 id="6-vt_jmp-和-vt_jmpi"><a class="header" href="#6-vt_jmp-和-vt_jmpi">6. <code>VT_JMP</code> 和 <code>VT_JMPI</code></a></h4>
+<pre><code class="language-c">#define VT_JMP  0x0034
+#define VT_JMPI  0x0035
+</code></pre>
+<ul>
+<li><code>VT_JMP</code> 表示一个值依赖于条件跳转的结果（比如 <code>if</code> 语句的 <code>true</code> 分支）。</li>
+<li><code>VT_JMPI</code> 表示跳转结果是 <code>false</code>（<code>false</code> 分支的跳转）。</li>
+</ul>
+<p>这两个宏主要用于跟踪条件跳转指令的结果。</p>
+<h4 id="7-vt_lval"><a class="header" href="#7-vt_lval">7. <code>VT_LVAL</code></a></h4>
+<pre><code class="language-c">#define VT_LVAL  0x0100
+</code></pre>
+<ul>
+<li>表示当前的值是一个<strong>左值</strong>（<code>lvalue</code>），即可以被赋值的变量或表达式。编译器在遇到赋值操作时会检查这个标志，以确认是否允许对当前值进行修改。</li>
+</ul>
+<h4 id="8-vt_sym"><a class="header" href="#8-vt_sym">8. <code>VT_SYM</code></a></h4>
+<pre><code class="language-c">#define VT_SYM  0x0200
+</code></pre>
+<ul>
+<li>表示当前的值是<strong>符号引用</strong>。符号可以是全局变量、函数名、或者其他在编译期间需要解析的标识符。</li>
+</ul>
+<h4 id="9-vt_mustcast"><a class="header" href="#9-vt_mustcast">9. <code>VT_MUSTCAST</code></a></h4>
+<pre><code class="language-c">#define VT_MUSTCAST  0x0C00
+</code></pre>
+<ul>
+<li>表示当前的值<strong>必须进行类型转换</strong>。这通常发生在小范围类型（如 <code>char</code> 或 <code>short</code>）存储在更大范围的寄存器中（如 <code>int</code> 类型时）。为了确保表达式的类型一致性，在生成代码前，编译器必须对这些值进行强制类型转换。</li>
+</ul>
+<h4 id="10-vt_nonconst"><a class="header" href="#10-vt_nonconst">10. <code>VT_NONCONST</code></a></h4>
+<pre><code class="language-c">#define VT_NONCONST  0x1000
+</code></pre>
+<ul>
+<li>表示当前的常量并不是一个 C 标准定义的<strong>整数常量表达式</strong>，例如它可能是一个浮点常量或其他非常量类型。这个标志有助于编译器在某些语法规则中区分不同类型的常量。</li>
+</ul>
+<h4 id="11-vt_mustbound"><a class="header" href="#11-vt_mustbound">11. <code>VT_MUSTBOUND</code></a></h4>
+<pre><code class="language-c">#define VT_MUSTBOUND  0x4000
+</code></pre>
+<ul>
+<li>表示在解引用值之前，必须进行<strong>边界检查</strong>。这通常用于编译器生成代码时的内存安全检查，确保指针解引用时不会越界。</li>
+</ul>
+<h4 id="12-vt_bounded"><a class="header" href="#12-vt_bounded">12. <code>VT_BOUNDED</code></a></h4>
+<pre><code class="language-c">#define VT_BOUNDED  0x8000
+</code></pre>
+<ul>
+<li>表示当前值已经过了边界检查。编译器可以在生成代码时跳过进一步的边界检查，因为这个值已经被安全验证过。</li>
+</ul>
+<h3 id="总体理解"><a class="header" href="#总体理解">总体理解</a></h3>
+<p><code>TinyCC</code> 编译器通过这些宏来表示<strong>当前值的状态</strong>，这些状态主要与以下几点有关：</p>
+<ol>
+<li><strong>值的位置</strong>：是存储在寄存器、栈、内存、还是常量池中。</li>
+<li><strong>值的类型</strong>：是常量、局部变量、左值、右值等。</li>
+<li><strong>值的语义</strong>：比如是否需要类型转换、边界检查、符号解析等。</li>
+</ol>
+<p>这些宏结合在一起，用来管理和跟踪在表达式解析、类型检查和代码生成过程中每个值的状态。通过这些标志位，编译器能够决定如何处理值，比如生成相应的指令，做什么样的类型转换，或者执行什么样的跳转逻辑。</p>
+<h3 id="使用场景"><a class="header" href="#使用场景">使用场景</a></h3>
+<p>假设编译器在处理某个表达式时，它可以通过 <code>current value</code> 来记录这个表达式的计算结果的状态。如果这个表达式是一个常量（如 <code>5</code>），那么 <code>VT_CONST</code> 就会被设置。如果这个常量需要类型转换（如 <code>int</code> 转换为 <code>float</code>），则会设置 <code>VT_MUSTCAST</code>。</p>
+<p>再例如，若某个值是一个局部变量，存储在栈上，编译器会设置 <code>VT_LOCAL</code> 或 <code>VT_LLOCAL</code>，表示该值的存储位置，以便后续生成代码时知道从哪里读取这个值。</p>
+<p>通过这些标志，<code>TinyCC</code> 编译器能有效地管理和优化编译过程。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter_4/table_ident.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter_4/scope.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter_4/table_ident.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter_4/scope.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>2.2 static的用法 - TinyCC源码分析</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">第一章</li><li class="chapter-item expanded "><a href="../chapter_1/section_1_1.html">1.1 tinycc项目介绍</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_2.html">1.2 autoconf的使用</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_3.html">1.3 config.mak的用法</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_4.html">1.4 config.mak如何使用？</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_5.html">1.5 构建调试环境</a></li><li class="chapter-item expanded "><a href="../chapter_1/section_1_6.html">1.6 入口代码</a></li><li class="chapter-item expanded affix "><li class="part-title">第二章</li><li class="chapter-item expanded "><a href="../chapter_2/main函数的argc和argv.html">2.1 main 函数的 argc 和 argv</a></li><li class="chapter-item expanded "><a href="../chapter_2/static的用法.html" class="active">2.2 static的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/ppfp变量的作用.html">2.3 ppfp 变量的作用</a></li><li class="chapter-item expanded "><a href="../chapter_2/C语言中的枚举的用法.html">2.4 C 语言中的枚举的用法</a></li><li class="chapter-item expanded "><a href="../chapter_2/输出文件的类型定义.html">2.5 输出文件的类型定义</a></li><li class="chapter-item expanded "><a href="../chapter_2/什么是目标文件.html">2.6 什么是目标文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/exe和dll文件的区别.html">2.7 exe和 dll 文件的区别</a></li><li class="chapter-item expanded "><a href="../chapter_2/c语言中预处理文件.html">2.8 c语言中预处理文件</a></li><li class="chapter-item expanded "><a href="../chapter_2/类型的前置声明.html">2.9 类型的前置声明</a></li><li class="chapter-item expanded "><a href="../chapter_2/TCCState.html">2.10 TCCState</a></li><li class="chapter-item expanded "><a href="../chapter_2/undefgnu_ext是什么意思.html">2.11 #undef gnu_ext 是什么意思</a></li><li class="chapter-item expanded "><a href="../chapter_2/tcc_parse_args命令行参数的解析.html">2.12 tcc_parse_args: 命令行参数的解析</a></li><li class="chapter-item expanded "><a href="../chapter_2/set_environment.html">2.13 set_environment</a></li><li class="chapter-item expanded affix "><li class="part-title">第三章</li><li class="chapter-item expanded "><a href="../chapter_3/编译的整体流程.html">编译的整体流程</a></li><li class="chapter-item expanded "><a href="../chapter_3/ST_FUNC的用法.html">ST_FUNC的用法</a></li><li class="chapter-item expanded "><a href="../chapter_3/CString.html">CString</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_compile.html">tcc_compile</a></li><li class="chapter-item expanded "><a href="../chapter_3/tcc_enter_state.html">tcc_enter_state</a></li><li class="chapter-item expanded "><a href="../chapter_3/preprocess_start.html">preprocess_start</a></li><li class="chapter-item expanded "><a href="../chapter_3/file.html">file</a></li><li class="chapter-item expanded "><a href="../chapter_3/tccgen_init.html">tccgen_init</a></li><li class="chapter-item expanded "><a href="../chapter_3/next.html">next</a></li><li class="chapter-item expanded "><a href="../chapter_3/decl.html">decl</a></li><li class="chapter-item expanded affix "><li class="part-title">第四章</li><li class="chapter-item expanded "><a href="../chapter_4/token-values.html">token values</a></li><li class="chapter-item expanded "><a href="../chapter_4/next_nomacro.html">next_nomacro</a></li><li class="chapter-item expanded "><a href="../chapter_4/define_find.html">define_find</a></li><li class="chapter-item expanded "><a href="../chapter_4/table_ident.html">table_ident</a></li><li class="chapter-item expanded "><a href="../chapter_4/current_value_type.html">current_value_type</a></li><li class="chapter-item expanded "><a href="../chapter_4/scope.html">scope</a></li><li class="chapter-item expanded "><a href="../chapter_4/filespec.html">filespec</a></li><li class="chapter-item expanded "><a href="../chapter_4/include_ifdef_stack.html">include_ifdef_stack</a></li><li class="chapter-item expanded "><a href="../chapter_4/pack_stack_ptr.html">pack_stack_ptr</a></li><li class="chapter-item expanded "><a href="../chapter_4/macro_ptr.html">macro_ptr</a></li><li class="chapter-item expanded "><a href="../chapter_4/TOK_LINEFEED_TOK_EOF.html">TOK_LINEFEED_TOK_EOF</a></li><li class="chapter-item expanded "><a href="../chapter_4/string_slice.html">string_slice</a></li><li class="chapter-item expanded "><a href="../chapter_4/lldb如何指定源码中的函数？.html">lldb如何指定源码中的函数</a></li><li class="chapter-item expanded affix "><li class="part-title">第五章</li><li class="chapter-item expanded "><a href="../chapter_5/语法分析.html">第五章 语法分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第六章</li><li class="chapter-item expanded "><a href="../chapter_6/语义分析.html">第六章 语义分析</a></li><li class="chapter-item expanded affix "><li class="part-title">第七章</li><li class="chapter-item expanded "><a href="../chapter_7/gen_function.html">gen_function</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">TinyCC源码分析</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="22-static的用法"><a class="header" href="#22-static的用法">2.2 static的用法</a></h1>
+<p>在 C 语言中，<code>static</code> 是一个关键字，它有多种不同的用法，具体取决于它在函数、变量或文件中的位置。<code>static</code> 主要用于控制变量和函数的<strong>作用域</strong>和<strong>生命周期</strong>。我们将详细讨论 <code>static</code> 在局部变量、全局变量和函数中的用法，并给出注意事项。</p>
+<h2 id="1-static-局部变量"><a class="header" href="#1-static-局部变量">1. <code>static</code> 局部变量</a></h2>
+<h3 id="11-用法"><a class="header" href="#11-用法">1.1 用法</a></h3>
+<p>当 <code>static</code> 修饰局部变量时，该变量的生命周期扩展为整个程序运行期间，即它是<strong>静态存储的</strong>，但它的作用域仍然是定义它的函数内。</p>
+<p>普通的局部变量在每次函数调用时都会重新创建和销毁，而 <code>static</code> 局部变量只在第一次调用时初始化，后续调用会保留其值。</p>
+<h3 id="12-示例"><a class="header" href="#12-示例">1.2 示例</a></h3>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+
+void counter() {
+    static int count = 0;  // 静态局部变量，初始化一次
+    count++;
+    printf("count = %d\n", count);
+}
+
+int main() {
+    counter();  // 输出: count = 1
+    counter();  // 输出: count = 2
+    counter();  // 输出: count = 3
+    return 0;
+}
+</code></pre>
+<h3 id="13-注意事项"><a class="header" href="#13-注意事项">1.3 注意事项</a></h3>
+<ul>
+<li><strong>静态局部变量只初始化一次</strong>：即使多次调用函数，也不会再次初始化静态局部变量。</li>
+<li><strong>生命周期是整个程序运行期间</strong>，但其作用域仅限于定义它的函数内部。</li>
+</ul>
+<h2 id="2-static-全局变量"><a class="header" href="#2-static-全局变量">2. <code>static</code> 全局变量</a></h2>
+<h3 id="21-用法"><a class="header" href="#21-用法">2.1 用法</a></h3>
+<p><code>static</code> 可以用来修饰全局变量，将全局变量的<strong>作用域限制在定义它的文件内部</strong>。通常，全局变量可以在整个程序中被其他文件访问，但使用 <code>static</code> 限制后，它只能在声明它的文件中访问，避免命名冲突。</p>
+<h3 id="22-示例"><a class="header" href="#22-示例">2.2 示例</a></h3>
+<pre><code class="language-c">// file1.c
+static int count = 10;  // 静态全局变量，只在 file1.c 内可见
+
+void increment() {
+    count++;
+}
+
+int get_count() {
+    return count;
+}
+
+// file2.c
+#include &lt;stdio.h&gt;
+
+extern int get_count();
+extern void increment();
+
+int main() {
+    increment();  // file1.c 中的静态全局变量 count 被增加
+    printf("count = %d\n", get_count());  // 输出: count = 11
+    return 0;
+}
+</code></pre>
+<h3 id="23-注意事项"><a class="header" href="#23-注意事项">2.3 注意事项</a></h3>
+<ul>
+<li><strong>作用域仅限于定义它的文件</strong>：即使其他文件使用 <code>extern</code> 关键字，也无法访问 <code>static</code> 修饰的全局变量。</li>
+<li><strong>命名冲突避免</strong>：使用 <code>static</code> 可以确保全局变量在不同文件中使用相同的名字时不会冲突。</li>
+</ul>
+<h2 id="3-static-函数"><a class="header" href="#3-static-函数">3. <code>static</code> 函数</a></h2>
+<h3 id="31-用法"><a class="header" href="#31-用法">3.1 用法</a></h3>
+<p><code>static</code> 函数的作用域也仅限于定义它的文件内。它与 <code>static</code> 全局变量类似，修饰函数后，该函数只能在定义它的文件内调用。</p>
+<h3 id="32-示例"><a class="header" href="#32-示例">3.2 示例</a></h3>
+<pre><code class="language-c">// file1.c
+static void helper() {
+    printf("This is a static function.\n");
+}
+
+void call_helper() {
+    helper();  // 可以在 file1.c 中调用
+}
+
+// file2.c
+#include &lt;stdio.h&gt;
+
+extern void call_helper();
+
+int main() {
+    call_helper();  // file1.c 中的函数被调用
+    // helper();  // 错误！无法在 file2.c 中调用 static 函数
+    return 0;
+}
+</code></pre>
+<h3 id="33-注意事项"><a class="header" href="#33-注意事项">3.3 注意事项</a></h3>
+<ul>
+<li><strong>作用域仅限于文件内</strong>：<code>static</code> 函数不能被其他文件直接调用，即使使用 <code>extern</code> 也无效。</li>
+<li><strong>函数命名冲突避免</strong>：如果在多个文件中定义了相同名字的 <code>static</code> 函数，它们彼此之间不会冲突，因为它们的作用域都仅限于各自的文件。</li>
+</ul>
+<h2 id="4-static-在类结构体中的使用c-对比"><a class="header" href="#4-static-在类结构体中的使用c-对比">4. <code>static</code> 在类/结构体中的使用（C++ 对比）</a></h2>
+<p>在 C 语言中，<code>static</code> 不能直接修饰结构体成员。但在 C++ 中，<code>static</code> 可以用于类的静态成员变量和静态成员函数。静态成员属于类而不属于类的实例，它们在所有实例之间共享。</p>
+<h3 id="41-示例c"><a class="header" href="#41-示例c">4.1 示例（C++）</a></h3>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+class MyClass {
+public:
+    static int count;  // 静态成员变量
+    MyClass() {
+        count++;
+    }
+};
+
+int MyClass::count = 0;  // 静态成员变量的初始化
+
+int main() {
+    MyClass obj1;
+    MyClass obj2;
+    std::cout &lt;&lt; "Count: " &lt;&lt; MyClass::count &lt;&lt; std::endl;  // 输出: Count: 2
+    return 0;
+}
+</code></pre>
+<h2 id="5-static-与多线程"><a class="header" href="#5-static-与多线程">5. <code>static</code> 与多线程</a></h2>
+<p>在多线程程序中，使用 <code>static</code> 局部变量时需要格外小心，因为静态局部变量是跨函数调用共享的。如果多个线程同时访问该变量而没有同步机制，可能会导致竞争条件（race condition）。</p>
+<h3 id="51-示例"><a class="header" href="#51-示例">5.1 示例</a></h3>
+<pre><code class="language-c">#include &lt;pthread.h&gt;
+#include &lt;stdio.h&gt;
+
+void* thread_func(void* arg) {
+    static int shared_data = 0;  // 静态局部变量，多个线程共享
+    shared_data++;
+    printf("Thread %ld: shared_data = %d\n", (long)arg, shared_data);
+    return NULL;
+}
+
+int main() {
+    pthread_t threads[5];
+
+    for (long i = 0; i &lt; 5; i++) {
+        pthread_create(&amp;threads[i], NULL, thread_func, (void*)i);
+    }
+
+    for (int i = 0; i &lt; 5; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    return 0;
+}
+</code></pre>
+<h3 id="52-竞争条件问题"><a class="header" href="#52-竞争条件问题">5.2 竞争条件问题</a></h3>
+<ul>
+<li><strong>问题</strong>：多个线程共享同一个 <code>static</code> 变量 <code>shared_data</code>，可能导致线程之间的竞争条件。多个线程同时访问或修改该变量时，可能会导致意外结果。</li>
+<li><strong>解决办法</strong>：通过使用互斥锁（mutex）等同步机制保护共享的 <code>static</code> 变量。</li>
+</ul>
+<h2 id="6-其他注意事项"><a class="header" href="#6-其他注意事项">6. 其他注意事项</a></h2>
+<ol>
+<li>
+<p><strong>静态变量初始化</strong>：</p>
+<ul>
+<li><code>static</code> 变量在程序开始时被初始化一次，未显式初始化的静态变量会被自动初始化为<strong>零</strong>。</li>
+<li>静态变量的初始化只发生一次，且是在程序启动时，而不是每次进入作用域时。</li>
+</ul>
+</li>
+<li>
+<p><strong>局部和全局的区别</strong>：</p>
+<ul>
+<li>局部静态变量的作用域是函数内部，而全局静态变量的作用域是文件内部。</li>
+<li>局部静态变量的生命周期与程序相同，而普通局部变量的生命周期只限于函数调用期间。</li>
+</ul>
+</li>
+<li>
+<p><strong>避免名称冲突</strong>：</p>
+<ul>
+<li>静态全局变量和静态函数可以有效避免不同文件中同名的全局变量或函数引发的冲突。</li>
+</ul>
+</li>
+<li>
+<p><strong>性能优化</strong>：</p>
+<ul>
+<li>静态变量的使用可能在某些场景中提供性能上的优化，因为它们在整个程序运行期间仅初始化一次。</li>
+</ul>
+</li>
+</ol>
+<h2 id="总结"><a class="header" href="#总结">总结</a></h2>
+<ul>
+<li><strong>局部变量</strong>：<code>static</code> 局部变量在函数内部作用域中可见，但生命周期贯穿整个程序运行。</li>
+<li><strong>全局变量</strong>：<code>static</code> 全局变量只能在声明它的文件中可见，作用域限制在文件内，避免全局命名冲突。</li>
+<li><strong>函数</strong>：<code>static</code> 函数只能在声明它的文件中可见，不能被其他文件调用。</li>
+<li><strong>多线程问题</strong>：在多线程程序中使用 <code>static</code> 变量需要特别注意同步问题。</li>
+</ul>
+<p>通过正确使用 <code>static</code>，可以控制变量的可见性、生命周期，以及有效避免全局变量和函数命名冲突，同时确保静态局部变量的值在多次函数调用之间保持一致。</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../chapter_2/main函数的argc和argv.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../chapter_2/ppfp变量的作用.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../chapter_2/main函数的argc和argv.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../chapter_2/ppfp变量的作用.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
